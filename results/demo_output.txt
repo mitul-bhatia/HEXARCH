@@ -1,0 +1,13 @@
+VCD info: dumpfile build/demo.vcd opened for output.
+PROGRAM: LOAD 0 -> STORE 1 -> HALT. Initially data[0]=7.
+F/R/W = instruction fetch / data read / data write. H/S = Harvard / shared.
+Cycle | Harvard F/R/W | Shared F/R/W | ACC H/S after edge | HALT H/S
+  1   |     1/0/0     |    1/0/0     |       0/0        |   0/0
+  2   |     1/1/0     |    0/1/0     |       7/7        |   0/0
+  3   |     1/0/1     |    1/0/0     |       7/7        |   0/0
+  4   |     0/0/0     |    0/0/1     |       7/7        |   1/0
+  5   |     0/0/0     |    1/0/0     |       7/7        |   1/0
+  6   |     0/0/0     |    0/0/0     |       7/7        |   1/1
+PASS demo               Harvard=4 shared=6 overlap=2 stalls=2 ACC=7
+DEMO PASSED: data[1]=7 in both designs. Harvard=4 cycles; shared=6 cycles.
+tb/tb_memory_compare.v:172: $finish called at 96000 (1ps)

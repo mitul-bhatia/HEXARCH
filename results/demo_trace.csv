@@ -1,0 +1,7 @@
+cycle,h_pc,h_ir,h_valid,h_fetch,h_read,h_write,h_acc_before,s_pc,s_ir,s_valid,s_fetch,s_read,s_write,s_acc_before,h_acc_after,s_acc_after,h_halted_after,s_halted_after
+1,0,00,0,1,0,0,0,0,00,0,1,0,0,0,0,0,0,0
+2,1,10,1,1,1,0,0,1,10,1,0,1,0,0,7,7,0,0
+3,2,21,1,1,0,1,7,1,10,0,1,0,0,7,7,7,0,0
+4,3,f0,1,0,0,0,7,2,21,1,0,0,1,7,7,7,1,0
+5,3,f0,0,0,0,0,7,2,21,0,1,0,0,7,7,7,1,0
+6,3,f0,0,0,0,0,7,3,f0,1,0,0,0,7,7,7,1,1

@@ -1,0 +1,722 @@
+$date
+	Sun Nov  8 09:32:58 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_memory_compare $end
+$var wire 1 ! s_write $end
+$var wire 1 " s_valid $end
+$var wire 1 # s_read $end
+$var wire 4 $ s_pc [3:0] $end
+$var wire 8 % s_ir [7:0] $end
+$var wire 1 & s_halted $end
+$var wire 1 ' s_fetch $end
+$var wire 1 ( s_fault $end
+$var wire 4 ) s_addr [3:0] $end
+$var wire 8 * s_acc [7:0] $end
+$var wire 1 + h_write $end
+$var wire 1 , h_valid $end
+$var wire 1 - h_read $end
+$var wire 4 . h_pc [3:0] $end
+$var wire 8 / h_ir [7:0] $end
+$var wire 1 0 h_halted $end
+$var wire 1 1 h_fetch $end
+$var wire 1 2 h_fault $end
+$var wire 4 3 h_addr [3:0] $end
+$var wire 8 4 h_acc [7:0] $end
+$var reg 1 5 boot_verified $end
+$var reg 1 6 clk $end
+$var reg 1 7 demo_only $end
+$var reg 1 8 hf $end
+$var reg 4 9 hp [3:0] $end
+$var reg 1 : hrd $end
+$var reg 1 ; hwr $end
+$var reg 1 < reset $end
+$var reg 1 = sf $end
+$var reg 4 > sp [3:0] $end
+$var reg 1 ? srd $end
+$var reg 1 @ swr $end
+$var integer 32 A cycles [31:0] $end
+$var integer 32 B hc [31:0] $end
+$var integer 32 C hr [31:0] $end
+$var integer 32 D hw [31:0] $end
+$var integer 32 E i [31:0] $end
+$var integer 32 F overlaps [31:0] $end
+$var integer 32 G sc [31:0] $end
+$var integer 32 H sr [31:0] $end
+$var integer 32 I stalls [31:0] $end
+$var integer 32 J summary [31:0] $end
+$var integer 32 K sw [31:0] $end
+$var integer 32 L trace [31:0] $end
+$scope module h $end
+$var wire 1 6 clk $end
+$var wire 1 < reset $end
+$var wire 4 M pc [3:0] $end
+$var wire 8 N instruction_register [7:0] $end
+$var wire 8 O instruction_data [7:0] $end
+$var wire 1 0 halted $end
+$var wire 1 1 fetch_enable $end
+$var wire 1 2 fault $end
+$var wire 1 , execute_valid $end
+$var wire 1 + data_write_enable $end
+$var wire 1 - data_read_enable $end
+$var wire 8 P data_read_data [7:0] $end
+$var wire 4 Q data_address [3:0] $end
+$var wire 8 R accumulator [7:0] $end
+$var parameter 136 S DATA_FILE $end
+$var parameter 136 T PROGRAM_FILE $end
+$var parameter 32 U SHARED_BUS $end
+$scope begin harvard_path $end
+$scope module dmem $end
+$var wire 4 V address [3:0] $end
+$var wire 1 6 clk $end
+$var wire 1 - read_enable $end
+$var wire 8 W write_data [7:0] $end
+$var wire 1 + write_enable $end
+$var wire 8 X read_data [7:0] $end
+$var parameter 136 Y DATA_FILE $end
+$upscope $end
+$scope module imem $end
+$var wire 4 Z address [3:0] $end
+$var wire 1 1 read_enable $end
+$var wire 8 [ read_data [7:0] $end
+$var parameter 136 \ PROGRAM_FILE $end
+$upscope $end
+$upscope $end
+$scope module controller $end
+$var wire 1 6 clk $end
+$var wire 1 ] data_access $end
+$var wire 1 - data_read_enable $end
+$var wire 1 + data_write_enable $end
+$var wire 1 1 fetch_enable $end
+$var wire 1 < reset $end
+$var wire 1 ^ running $end
+$var wire 1 _ stop_now $end
+$var wire 1 ` store $end
+$var wire 4 a pc [3:0] $end
+$var wire 1 b load $end
+$var wire 8 c instruction_data [7:0] $end
+$var wire 1 d illegal $end
+$var wire 1 e halt $end
+$var wire 8 f data_read_data [7:0] $end
+$var wire 4 g data_address [3:0] $end
+$var parameter 32 h SHARED_BUS $end
+$var reg 8 i accumulator [7:0] $end
+$var reg 1 , execute_valid $end
+$var reg 1 2 fault $end
+$var reg 1 0 halted $end
+$var reg 8 j instruction_register [7:0] $end
+$scope module counter $end
+$var wire 1 6 clk $end
+$var wire 1 1 enable $end
+$var wire 1 < reset $end
+$var reg 4 k address [3:0] $end
+$upscope $end
+$scope module decode $end
+$var wire 8 l instruction [7:0] $end
+$var wire 1 ` store $end
+$var wire 1 b load $end
+$var wire 1 d illegal $end
+$var wire 1 e halt $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module s $end
+$var wire 1 6 clk $end
+$var wire 1 < reset $end
+$var wire 4 m pc [3:0] $end
+$var wire 8 n instruction_register [7:0] $end
+$var wire 8 o instruction_data [7:0] $end
+$var wire 1 & halted $end
+$var wire 1 ' fetch_enable $end
+$var wire 1 ( fault $end
+$var wire 1 " execute_valid $end
+$var wire 1 ! data_write_enable $end
+$var wire 1 # data_read_enable $end
+$var wire 8 p data_read_data [7:0] $end
+$var wire 4 q data_address [3:0] $end
+$var wire 8 r accumulator [7:0] $end
+$var parameter 136 s DATA_FILE $end
+$var parameter 136 t PROGRAM_FILE $end
+$var parameter 32 u SHARED_BUS $end
+$scope begin shared_path $end
+$var wire 5 v physical_address [4:0] $end
+$var wire 8 w memory_read_data [7:0] $end
+$scope module addresses $end
+$var wire 4 x data_address [3:0] $end
+$var wire 1 y data_select $end
+$var wire 4 z instruction_address [3:0] $end
+$var wire 5 { physical_address [4:0] $end
+$upscope $end
+$scope module mem $end
+$var wire 5 | address [4:0] $end
+$var wire 1 6 clk $end
+$var wire 1 } read_enable $end
+$var wire 8 ~ write_data [7:0] $end
+$var wire 1 ! write_enable $end
+$var wire 8 !" read_data [7:0] $end
+$var parameter 136 "" DATA_FILE $end
+$var parameter 136 #" PROGRAM_FILE $end
+$upscope $end
+$upscope $end
+$scope module controller $end
+$var wire 1 6 clk $end
+$var wire 1 $" data_access $end
+$var wire 1 # data_read_enable $end
+$var wire 1 ! data_write_enable $end
+$var wire 1 ' fetch_enable $end
+$var wire 1 < reset $end
+$var wire 1 %" running $end
+$var wire 1 &" stop_now $end
+$var wire 1 '" store $end
+$var wire 4 (" pc [3:0] $end
+$var wire 1 )" load $end
+$var wire 8 *" instruction_data [7:0] $end
+$var wire 1 +" illegal $end
+$var wire 1 ," halt $end
+$var wire 8 -" data_read_data [7:0] $end
+$var wire 4 ." data_address [3:0] $end
+$var parameter 32 /" SHARED_BUS $end
+$var reg 8 0" accumulator [7:0] $end
+$var reg 1 " execute_valid $end
+$var reg 1 ( fault $end
+$var reg 1 & halted $end
+$var reg 8 1" instruction_register [7:0] $end
+$scope module counter $end
+$var wire 1 6 clk $end
+$var wire 1 ' enable $end
+$var wire 1 < reset $end
+$var reg 4 2" address [3:0] $end
+$upscope $end
+$scope module decode $end
+$var wire 8 3" instruction [7:0] $end
+$var wire 1 '" store $end
+$var wire 1 )" load $end
+$var wire 1 +" illegal $end
+$var wire 1 ," halt $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope task check $end
+$var reg 1 4" condition $end
+$upscope $end
+$scope task prepare $end
+$var integer 32 5" mode [31:0] $end
+$upscope $end
+$scope task run_checked $end
+$var reg 1 6" expected_fault $end
+$var reg 8 7" final_acc [7:0] $end
+$var reg 1 8" record_trace $end
+$var integer 32 9" expected_hc [31:0] $end
+$var integer 32 :" expected_sc [31:0] $end
+$var integer 32 ;" memory_ops [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b1 /"
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100101011011010110111100101110011010000110010101111000 #"
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100001011101000110000100101110011010000110010101111000 ""
+b1 u
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100101011011010110111100101110011010000110010101111000 t
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100001011101000110000100101110011010000110010101111000 s
+b0 h
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100101011011010110111100101110011010000110010101111000 \
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100001011101000110000100101110011010000110010101111000 Y
+b0 U
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100101011011010110111100101110011010000110010101111000 T
+b111000001110010011011110110011101110010011000010110110101110011001011110110010001100001011101000110000100101110011010000110010101111000 S
+$end
+#0
+$dumpvars
+bx ;"
+bx :"
+bx 9"
+x8"
+bx 7"
+x6"
+b0 5"
+14"
+bx 3"
+bx 2"
+bx 1"
+bx 0"
+bx ."
+b0 -"
+x,"
+x+"
+b0 *"
+x)"
+bx ("
+x'"
+x&"
+0%"
+0$"
+b0 !"
+bx ~
+0}
+b0xxxx |
+b0xxxx {
+bx z
+0y
+bx x
+b0 w
+b0xxxx v
+bx r
+bx q
+b0 p
+b0 o
+bx n
+bx m
+bx l
+bx k
+bx j
+bx i
+bx g
+b0 f
+xe
+xd
+b0 c
+xb
+bx a
+x`
+x_
+0^
+0]
+b0 [
+bx Z
+b0 X
+bx W
+bx V
+bx R
+bx Q
+b0 P
+b0 O
+bx N
+bx M
+bx L
+bx K
+b10000000000000000000000000000011 J
+bx I
+bx H
+bx G
+bx F
+bx E
+bx D
+bx C
+bx B
+bx A
+x@
+x?
+bx >
+x=
+1<
+x;
+x:
+bx 9
+x8
+17
+06
+05
+bx 4
+bx 3
+x2
+01
+x0
+bx /
+bx .
+0-
+x,
+0+
+bx *
+bx )
+x(
+0'
+x&
+bx %
+bx $
+0#
+x"
+0!
+$end
+#5000
+0d
+b0 v
+b0 {
+b0 |
+0+"
+0_
+b0 3
+b0 Q
+b0 V
+b0 g
+0b
+0`
+0e
+0&"
+b0 )
+b0 q
+b0 x
+b0 ."
+0)"
+0'"
+0,"
+b0 .
+b0 M
+b0 Z
+b0 a
+b0 k
+02
+00
+0,
+b0 /
+b0 N
+b0 j
+b0 l
+b0 4
+b0 R
+b0 W
+b0 i
+b0 $
+b0 m
+b0 z
+b0 ("
+b0 2"
+0(
+0&
+0"
+b0 %
+b0 n
+b0 1"
+b0 3"
+b0 *
+b0 r
+b0 ~
+b0 0"
+16
+#10000
+15
+b10000 E
+06
+#15000
+16
+#20000
+b10000 p
+b10000 -"
+b10000 o
+b10000 *"
+b10000 w
+b10000 !"
+b10000 O
+b10000 [
+b10000 c
+1}
+11
+1'
+1^
+1%"
+b10000000000000000000000000000100 L
+b0 K
+b0 H
+b0 D
+b0 C
+b0 I
+b0 F
+b0 G
+b0 B
+b0 A
+18"
+06"
+b111 7"
+b10 ;"
+b110 :"
+b100 9"
+0<
+06
+#25000
+11
+0'
+0_
+b111 p
+b111 -"
+b111 o
+b111 *"
+b111 w
+b111 !"
+0&"
+b111 P
+b111 X
+b111 f
+1]
+1y
+1$"
+b100001 O
+b100001 [
+b100001 c
+0d
+1-
+b10000 v
+b10000 {
+b10000 |
+0+"
+1#
+1b
+1)"
+b1 .
+b1 M
+b1 Z
+b1 a
+b1 k
+b10000 /
+b10000 N
+b10000 j
+b10000 l
+1,
+b1 $
+b1 m
+b1 z
+b1 ("
+b1 2"
+b10000 %
+b10000 n
+b10000 1"
+b10000 3"
+1"
+b1 G
+b1 B
+0@
+0?
+0;
+0:
+1=
+18
+b0 >
+b0 9
+b1 A
+16
+#30000
+06
+#35000
+1'
+b1 v
+b1 {
+b1 |
+b100001 p
+b100001 -"
+b100001 o
+b100001 *"
+b100001 w
+b100001 !"
+0y
+1}
+0$"
+b0 P
+b0 X
+b0 f
+0#
+0-
+1+
+b11110000 O
+b11110000 [
+b11110000 c
+b1 3
+b1 Q
+b1 V
+b1 g
+0b
+1`
+0"
+b111 *
+b111 r
+b111 ~
+b111 0"
+b100001 /
+b100001 N
+b100001 j
+b100001 l
+b111 4
+b111 R
+b111 W
+b111 i
+b10 .
+b10 M
+b10 Z
+b10 a
+b10 k
+b1 H
+b1 C
+b1 I
+b1 F
+b10 G
+b10 B
+1?
+1:
+0=
+b1 >
+b1 9
+b10 A
+16
+#40000
+06
+#45000
+b0 O
+b0 [
+b0 c
+0}
+01
+0'
+b0 p
+b0 -"
+b0 o
+b0 *"
+b0 w
+b0 !"
+0]
+1_
+1y
+1$"
+0+
+b10001 v
+b10001 {
+b10001 |
+1!
+b0 3
+b0 Q
+b0 V
+b0 g
+0`
+1e
+b1 )
+b1 q
+b1 x
+b1 ."
+0)"
+1'"
+b11 .
+b11 M
+b11 Z
+b11 a
+b11 k
+b11110000 /
+b11110000 N
+b11110000 j
+b11110000 l
+b10 $
+b10 m
+b10 z
+b10 ("
+b10 2"
+b100001 %
+b100001 n
+b100001 1"
+b100001 3"
+1"
+b1 D
+b10 F
+b11 G
+b11 B
+0?
+1;
+0:
+1=
+b10 9
+b11 A
+16
+#50000
+06
+#55000
+b11110000 p
+b11110000 -"
+b11110000 o
+b11110000 *"
+b11110000 w
+b11110000 !"
+1}
+1'
+b10 v
+b10 {
+b10 |
+0y
+0$"
+0!
+0_
+0^
+0"
+0,
+10
+b1 K
+b10 I
+b100 G
+b100 B
+1@
+0;
+0=
+08
+b10 >
+b11 9
+b100 A
+16
+#60000
+06
+#65000
+b0 p
+b0 -"
+b0 o
+b0 *"
+b0 w
+b0 !"
+0}
+0'
+1&"
+b11 v
+b11 {
+b11 |
+b0 )
+b0 q
+b0 x
+b0 ."
+0'"
+1,"
+b11 $
+b11 m
+b11 z
+b11 ("
+b11 2"
+b11110000 %
+b11110000 n
+b11110000 1"
+b11110000 3"
+1"
+b101 G
+0@
+1=
+b101 A
+16
+#70000
+06
+#75000
+0&"
+0%"
+0"
+1&
+b110 G
+0=
+b11 >
+b110 A
+16
+#76000
+b10000 E
+#80000
+06
+#85000
+16
+#90000
+06
+#95000
+16
+#96000

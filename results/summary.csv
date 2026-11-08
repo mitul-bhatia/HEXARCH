@@ -1,0 +1,7 @@
+case,harvard_cycles,shared_cycles,overlap_cycles,shared_stalls,accumulator,fault
+demo,4,6,2,2,7,0
+address_boundaries,6,10,4,4,165,0
+no_data_access,4,4,0,0,0,0
+halt_only,2,2,0,0,0,0
+illegal_opcode,2,2,0,0,0,1
+reset_and_restart,8,14,6,6,7,0
