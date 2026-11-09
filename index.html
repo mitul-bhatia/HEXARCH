@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Illustrated study guide for Project 9: Instruction and Data Memory Hierarchy (Harvard vs shared memory).">
+<title>HEXARCH Study Guide</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  :root { --ink:#172638; --blue:#145f9b; --orange:#a54c13; --green:#17745c; --mute:#5b6b7b; --line:#d5dce3; --bg:#f3f6f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: var(--ink); font-size: 10.6pt; line-height: 1.45; margin: 0; }
+  .page { page-break-after: always; break-after: page; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  h1 { font-size: 24pt; margin: 0 0 4px; line-height: 1.1; }
+  h2 { font-size: 16pt; margin: 0 0 8px; padding-bottom: 5px; border-bottom: 3px solid var(--ink); }
+  h3 { font-size: 11.5pt; margin: 14px 0 4px; }
+  p { margin: 5px 0 8px; }
+  .sub { color: var(--mute); font-size: 11.5pt; margin-bottom: 14px; }
+  .blue { color: var(--blue); } .orange { color: var(--orange); } .green { color: var(--green); }
+  .callout { background: var(--bg); border-left: 5px solid var(--ink); padding: 9px 13px; margin: 10px 0; border-radius: 3px; }
+  .callout.b { border-color: var(--blue); } .callout.o { border-color: var(--orange); } .callout.g { border-color: var(--green); }
+  .big { font-size: 13pt; font-weight: 700; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9.6pt; }
+  th, td { border: 1px solid var(--line); padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: var(--bg); }
+  code, .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 9.2pt; background: var(--bg); padding: 1px 4px; border-radius: 3px; }
+  pre { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.8pt; background: #101c2a; color: #e8eef5; padding: 10px 12px; border-radius: 6px; line-height: 1.4; margin: 8px 0; white-space: pre-wrap; }
+  pre .hl { background: #b6540c; color: #fff; padding: 0 2px; border-radius: 2px; }
+  img { max-width: 100%; }
+  .cols { display: flex; gap: 12px; } .cols > div { flex: 1; }
+  .card { border: 2px solid var(--line); border-radius: 8px; padding: 9px 12px; }
+  .card.b { border-color: var(--blue); } .card.o { border-color: var(--orange); }
+  .card h3 { margin-top: 0; }
+  ul, ol { margin: 4px 0 8px; padding-left: 20px; } li { margin: 2px 0; }
+  .ok::before { content: "\2713  "; color: var(--green); font-weight: 700; }
+  .warn::before { content: "!  "; color: var(--orange); font-weight: 700; }
+  ul.plain { list-style: none; padding-left: 0; }
+  /* cycle chart */
+  .chart { display: grid; grid-template-columns: 112px repeat(6, 1fr); gap: 4px; margin: 10px 0; font-size: 9pt; }
+  .chart .h { font-weight: 700; text-align: center; background: var(--ink); color: #fff; padding: 4px; border-radius: 3px; }
+  .chart .lab { font-weight: 700; padding: 8px 4px; font-size: 9pt; }
+  .cell { text-align: center; padding: 8px 2px; border-radius: 4px; font-weight: 600; min-height: 34px; display: flex; align-items: center; justify-content: center; line-height: 1.15; }
+  .f-b { background: #cfe3f5; color: #0d3f69; } .e-b { background: var(--blue); color: #fff; }
+  .f-o { background: #f6dcc7; color: #6c300a; } .e-o { background: var(--orange); color: #fff; }
+  .no { background: #eef1f4; color: #5b6b7b; font-weight: 400; }
+  .blk { background: #fff; border: 2px dashed #c0392b; color: #c0392b; }
+  .done { background: #d9efe7; color: var(--green); }
+  /* nibbles */
+  .byte { display: inline-flex; gap: 4px; margin: 0 14px 0 0; align-items: flex-end; }
+  .nib { width: 54px; text-align: center; border-radius: 6px; padding: 6px 0 4px; font-family: Menlo, monospace; font-size: 20pt; font-weight: 700; color: #fff; }
+  .nib small { display: block; font-size: 7.5pt; font-family: Arial, sans-serif; font-weight: 400; }
+  .op { background: var(--blue); } .ad { background: var(--green); }
+  .tag { display:inline-block; font-size: 8.5pt; font-weight: 700; padding: 1px 7px; border-radius: 10px; color:#fff; }
+  .member { border: 2px solid var(--line); border-radius: 8px; padding: 8px 12px 4px; margin: 10px 0; page-break-inside: avoid; break-inside: avoid; }
+  .member .t { font-size: 9pt; color: var(--mute); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .member .show { font-size: 9.2pt; color: var(--mute); margin: 2px 0 4px; }
+  .member .say { font-size: 10.8pt; line-height: 1.5; }
+  .small { font-size: 9pt; color: var(--mute); }
+  .cover { padding-top: 70px; }
+  .cover h1 { font-size: 34pt; }
+  .pill { display:inline-block; background: var(--ink); color:#fff; padding: 3px 12px; border-radius: 14px; font-size: 10pt; margin-right: 6px; }
+  .toc li { margin: 4px 0; font-size: 11.5pt; }
+  .cols li { font-size: 9.8pt; line-height: 1.38; }
+
+  @media screen {
+    body { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; background: #fff; }
+    .page { padding-bottom: 28px; margin-bottom: 30px; border-bottom: 2px solid var(--line); }
+    .topbar { display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; background: var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 14px; margin-bottom:10px; font-size:10pt; }
+    .topbar a { color: var(--blue); font-weight:700; }
+    .cover { padding-top: 24px; }
+  }
+  @media print { .topbar { display:none; } }
+  @media (max-width: 640px) {
+    .cols { flex-direction: column; }
+    .chart { font-size: 7.5pt; grid-template-columns: 64px repeat(6, 1fr); gap: 3px; }
+    .cell { padding: 6px 1px; }
+    .cover h1 { font-size: 26pt; }
+    table { font-size: 9pt; display: block; overflow-x: auto; }
+    pre { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar"><span>HEXARCH study guide &middot; Project 9</span><a href="HEXARCH_Study_Guide.pdf">Download the PDF</a></div>
+
+<!-- ============ COVER ============ -->
+<section class="page cover">
+  <span class="pill">Project 9</span><span class="pill">MCA Projects 2026</span><span class="pill">Section A</span>
+  <h1 style="margin-top:22px">HEXARCH<br>Study Guide</h1>
+  <p class="sub" style="font-size:14pt">Instruction and Data Memory Hierarchy, explained from zero.</p>
+
+  <div class="callout big" style="margin-top:26px">
+    One sentence version: <span class="blue">separate paths for instructions and data</span> let a processor do two memory jobs in the same clock tick. A <span class="orange">shared single-port memory</span> has to do them one after another.
+  </div>
+
+  <h3 style="margin-top:28px">What is in this guide</h3>
+  <ol class="toc">
+    <li>The big idea in plain words</li>
+    <li>Words you need to know</li>
+    <li>The tiny processor and its three-instruction program</li>
+    <li>The two designs side by side</li>
+    <li>Cycle by cycle: why 4 versus 6</li>
+    <li>The files: what each one does</li>
+    <li>The one rule that creates the difference</li>
+    <li>Tests, results and how to run everything</li>
+    <li>Review: what was checked, what is still open</li>
+    <li>Questions you may be asked</li>
+    <li>Video scripts for all five members</li>
+  </ol>
+  <p class="small" style="margin-top:30px">Team: Akshat Chauhan, Ajeesh Amreet, Vaibhav, Hardik Maheshwari, Mitul Bhatia. Phase I deadline: 16 November 2026, 11:59 PM IST.<br>Every number in this guide comes from a real simulation run (Icarus Verilog 13.0).</p>
+</section>
+
+<!-- ============ 1 BIG IDEA ============ -->
+<section class="page">
+  <h2>1. The big idea in plain words</h2>
+  <p>A processor keeps asking memory two different questions:</p>
+  <ul>
+    <li><b class="blue">"What should I do next?"</b> The answer is an <b>instruction</b>.</li>
+    <li><b class="green">"What value am I working on?"</b> The answer is <b>data</b>.</li>
+  </ul>
+
+  <h3>Think of a kitchen</h3>
+  <p>A cook needs a <b>recipe</b> (instructions) and <b>ingredients</b> (data).</p>
+  <div class="cols">
+    <div class="card b">
+      <h3 class="blue">Harvard: two counters</h3>
+      <p>One counter hands out recipe steps. A different counter hands out ingredients. The cook can <b>read the next recipe step while grabbing an ingredient</b>. Nobody waits.</p>
+    </div>
+    <div class="card o">
+      <h3 class="orange">Shared: one counter</h3>
+      <p>One window serves both. If the cook is collecting an ingredient, the next recipe step <b>has to wait</b> until the window is free.</p>
+    </div>
+  </div>
+
+  <h3>What this project does</h3>
+  <p>We built both memory designs in <b>Verilog</b> (a language for describing digital hardware), gave them the <b>same tiny processor, same program, same data, same total memory</b>, simulated them, and counted the clock cycles each needs.</p>
+
+  <div class="callout g">
+    <div class="big">The result</div>
+    Same answer in both (the value 7 gets copied to a new place). Harvard finishes in <b>4 cycles</b>. Shared memory needs <b>6 cycles</b>, because two instruction fetches had to wait for the single port.
+  </div>
+
+  <div class="callout o">
+    <div class="big">An honest limit, say this out loud if asked</div>
+    This proves a point about <i>port contention</i> in a tiny model. It does <b>not</b> prove "Harvard is always faster". A program with no data accesses takes 4 cycles in <i>both</i> designs (we tested it).
+  </div>
+
+  <h3>Where it sits in the real world</h3>
+  <p>Many small microcontrollers (PIC, AVR) use separate instruction and data memories. Big CPUs usually present one shared memory but use separate instruction and data <i>caches</i>. That is why it is called a "memory hierarchy" project. The optional lower-level shared memory from the brief is <b>deliberately left out</b>, which the brief allows.</p>
+</section>
+
+<!-- ============ 2 VOCAB ============ -->
+<section class="page">
+  <h2>2. Words you need to know</h2>
+  <table>
+    <tr><th style="width:22%">Word</th><th>Meaning in this project</th></tr>
+    <tr><td><b>Instruction</b></td><td>A one-byte command such as LOAD, STORE, HALT.</td></tr>
+    <tr><td><b>Data</b></td><td>The value being worked on. Here: the number 7.</td></tr>
+    <tr><td><b>Memory</b></td><td>A table of bytes you read by address. Instruction memory: 16 bytes. Data memory: 16 bytes.</td></tr>
+    <tr><td><b>Port</b></td><td>One "door" into a memory: one address in, one value out per cycle. A single-port memory can serve only one access per cycle.</td></tr>
+    <tr><td><b>Clock / cycle</b></td><td>The heartbeat. Things change on the <b>rising edge</b>. In simulation one cycle is 10 ns (a test setting, not a measured hardware speed).</td></tr>
+    <tr><td><b>PC (program counter)</b></td><td>4-bit counter holding the address of the next instruction to fetch.</td></tr>
+    <tr><td><b>Fetch</b></td><td>Reading the next instruction from memory.</td></tr>
+    <tr><td><b>IR (instruction register)</b></td><td>Holds the instruction that is running <i>now</i> while the PC already points at the next one.</td></tr>
+    <tr><td><b>ACC (accumulator)</b></td><td>One 8-bit register that temporarily holds a value. LOAD fills it, STORE empties it into memory.</td></tr>
+    <tr><td><b>Valid bit</b></td><td><code>execute_valid</code>: "the IR holds a fresh instruction". Stops an old instruction from running twice when a fetch was blocked.</td></tr>
+    <tr><td><b>Harvard</b></td><td>Separate instruction and data memories with independent ports.</td></tr>
+    <tr><td><b>Shared / single-port</b></td><td>One memory, one port, instructions and data take turns.</td></tr>
+    <tr><td><b>Address decoder</b></td><td>In shared mode: picks the physical address. Instructions to 0-15, data to 16-31.</td></tr>
+    <tr><td><b>Stall / bubble</b></td><td>A cycle where the fetch is blocked, so nothing new enters the processor.</td></tr>
+    <tr><td><b>HALT</b></td><td>Instruction that stops the processor; it then makes no memory requests.</td></tr>
+    <tr><td><b>Testbench</b></td><td>Verilog code that runs the design and checks the answers automatically (<code>tb/tb_memory_compare.v</code>).</td></tr>
+    <tr><td><b>VCD / waveform</b></td><td>A recording of every signal over time that a viewer can plot.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 3 PROCESSOR ============ -->
+<section class="page">
+  <h2>3. The tiny processor and its program</h2>
+  <h3>Every instruction is one byte: two halves (nibbles)</h3>
+  <div style="margin:10px 0 4px">
+    <span class="byte"><span class="nib op">1<small>operation</small></span><span class="nib ad">0<small>data address</small></span></span>
+    <span class="byte"><span class="nib op">2<small>operation</small></span><span class="nib ad">1<small>data address</small></span></span>
+    <span class="byte"><span class="nib op">F<small>operation</small></span><span class="nib ad">0<small>ignored</small></span></span>
+  </div>
+  <div class="small" style="margin-bottom:8px">Hex bytes in <code>programs/demo.hex</code>: <b>10 &nbsp; 21 &nbsp; F0</b></div>
+
+  <table>
+    <tr><th>High nibble</th><th>Instruction</th><th>What it does</th></tr>
+    <tr><td><code>1</code></td><td><b>LOAD a</b></td><td>ACC &larr; data[a]</td></tr>
+    <tr><td><code>2</code></td><td><b>STORE a</b></td><td>data[a] &larr; ACC</td></tr>
+    <tr><td><code>F</code></td><td><b>HALT</b></td><td>Stop; no more memory requests</td></tr>
+    <tr><td><code>0</code></td><td><b>NOP</b></td><td>Do nothing</td></tr>
+    <tr><td>anything else</td><td><b>illegal</b></td><td>Stop and raise the <code>fault</code> flag</td></tr>
+  </table>
+
+  <h3>The demonstration program</h3>
+  <pre>LOAD 0     ; ACC = data[0]   (data[0] starts as 7)
+STORE 1    ; data[1] = ACC   (now data[1] is 7 too)
+HALT       ; stop</pre>
+  <div class="callout g">It simply <b>copies the number 7 from data address 0 to data address 1</b>. Both designs must end with data[1] = 7 and ACC = 7.</div>
+
+  <h3>The processor's three parts</h3>
+  <svg viewBox="0 0 700 150" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
+    <defs><marker id="a" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#172638"/></marker></defs>
+    <rect x="10" y="30" width="190" height="90" rx="8" fill="#fff" stroke="#145f9b" stroke-width="3"/>
+    <text x="105" y="60" text-anchor="middle" font-weight="700" fill="#145f9b" font-size="17">PC</text>
+    <text x="105" y="84" text-anchor="middle" font-size="13">4-bit program counter</text>
+    <text x="105" y="104" text-anchor="middle" font-size="12" fill="#5b6b7b">"which instruction next?"</text>
+    <rect x="255" y="30" width="190" height="90" rx="8" fill="#fff" stroke="#145f9b" stroke-width="3"/>
+    <text x="350" y="60" text-anchor="middle" font-weight="700" fill="#145f9b" font-size="17">IR + valid bit</text>
+    <text x="350" y="84" text-anchor="middle" font-size="13">instruction running now</text>
+    <text x="350" y="104" text-anchor="middle" font-size="12" fill="#5b6b7b">"is it fresh?"</text>
+    <rect x="500" y="30" width="190" height="90" rx="8" fill="#fff" stroke="#17745c" stroke-width="3"/>
+    <text x="595" y="60" text-anchor="middle" font-weight="700" fill="#17745c" font-size="17">ACC</text>
+    <text x="595" y="84" text-anchor="middle" font-size="13">8-bit accumulator</text>
+    <text x="595" y="104" text-anchor="middle" font-size="12" fill="#5b6b7b">"the value in hand"</text>
+    <path d="M200,75 L255,75" stroke="#172638" stroke-width="2.5" marker-end="url(#a)"/>
+    <path d="M445,75 L500,75" stroke="#172638" stroke-width="2.5" marker-end="url(#a)"/>
+    <text x="228" y="66" text-anchor="middle" font-size="11">fetch</text>
+    <text x="472" y="66" text-anchor="middle" font-size="11">execute</text>
+  </svg>
+  <p class="small" style="margin-top:0">"Fetch" really goes through memory: the PC supplies an address, the instruction memory returns the byte, and the byte is stored in the IR.</p>
+  <p>Having <b>one instruction register</b> is what lets the processor <b>execute the current instruction while fetching the next</b>. That overlap is the only pipelining in the design, and it is exactly what the Harvard memory makes possible.</p>
+</section>
+
+<!-- ============ 4 TWO DESIGNS ============ -->
+<section class="page">
+  <h2>4. The two designs side by side</h2>
+  <img src="figures/architecture.png" alt="Block diagram of the Harvard and shared designs">
+  <table>
+    <tr><th></th><th class="blue">Harvard</th><th class="orange">Shared single-port</th></tr>
+    <tr><td><b>Memory</b></td><td>16-byte instruction + 16-byte data</td><td>One 32-byte memory</td></tr>
+    <tr><td><b>Ports</b></td><td>Two independent</td><td>One, taken in turns</td></tr>
+    <tr><td><b>Addresses</b></td><td>Each memory starts at 0</td><td>0-15 instructions, 16-31 data (address decoder)</td></tr>
+    <tr><td><b>Fetch during LOAD/STORE?</b></td><td>Yes, same cycle</td><td>No: data wins, fetch is blocked, PC holds</td></tr>
+    <tr><td><b>Same for both</b></td><td colspan="2">Controller, program, starting data, total capacity (32 bytes), clock period</td></tr>
+  </table>
+  <p class="small">In the code, one parameter chooses the design: <code>SHARED_BUS = 0</code> is Harvard, <code>SHARED_BUS = 1</code> is shared (in <code>rtl/memory_system.v</code>). The same controller runs on both, so the only thing that differs is how the memory is wired.</p>
+</section>
+
+<!-- ============ 5 CYCLE BY CYCLE ============ -->
+<section class="page">
+  <h2>5. Cycle by cycle: why 4 versus 6</h2>
+  <p>Read each row left to right. Light box = <b>fetching</b> that instruction. Dark box = <b>executing</b> it.</p>
+
+  <h3 class="blue">Harvard: 4 cycles</h3>
+  <div class="chart">
+    <div></div><div class="h">1</div><div class="h">2</div><div class="h">3</div><div class="h">4</div><div class="h">5</div><div class="h">6</div>
+    <div class="lab">Fetching</div>
+    <div class="cell f-b">LOAD 0</div><div class="cell f-b">STORE 1</div><div class="cell f-b">HALT</div><div class="cell no">none</div><div class="cell done">stopped</div><div class="cell done">stopped</div>
+    <div class="lab">Executing</div>
+    <div class="cell no">empty</div><div class="cell e-b">LOAD 0<br>reads 7</div><div class="cell e-b">STORE 1<br>writes 7</div><div class="cell e-b">HALT</div><div class="cell done">stopped</div><div class="cell done">stopped</div>
+  </div>
+
+  <h3 class="orange">Shared: 6 cycles</h3>
+  <div class="chart">
+    <div></div><div class="h">1</div><div class="h">2</div><div class="h">3</div><div class="h">4</div><div class="h">5</div><div class="h">6</div>
+    <div class="lab">Fetching</div>
+    <div class="cell f-o">LOAD 0</div><div class="cell blk">BLOCKED</div><div class="cell f-o">STORE 1</div><div class="cell blk">BLOCKED</div><div class="cell f-o">HALT</div><div class="cell no">none</div>
+    <div class="lab">Executing</div>
+    <div class="cell no">empty</div><div class="cell e-o">LOAD 0<br>reads 7</div><div class="cell no">empty</div><div class="cell e-o">STORE 1<br>writes 7</div><div class="cell no">empty</div><div class="cell e-o">HALT</div>
+  </div>
+
+  <div class="callout o">
+    <b>Cycle 2 is the key moment.</b> Harvard's fetch and data read signals are both 1 at once. In shared memory the fetch signal is 0, because the only port is busy reading data. The same thing happens in cycle 4 when STORE writes. Two blocked fetches = two extra cycles = 6 instead of 4.
+  </div>
+
+  <img src="figures/waveforms.png" alt="Waveforms of the demo" style="width:74%;display:block;margin:0 auto">
+  <p class="small">Same story as lines going up and down. Blue (Harvard): fetch stays high while read and write pulse. Orange (shared): fetch drops every time read or write is high.</p>
+
+  <p><b>Why "empty" in cycles 3 and 5 (shared)?</b> A blocked fetch leaves no fresh instruction, so the valid bit goes to 0 and the old LOAD is not executed again.</p>
+</section>
+
+<!-- ============ 6 FILES ============ -->
+<section class="page">
+  <h2>6. The files: what each one does</h2>
+  <svg viewBox="0 0 700 250" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
+    <defs><marker id="b" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#172638"/></marker></defs>
+    <rect x="5" y="5" width="690" height="240" rx="10" fill="#f3f6f9" stroke="#172638" stroke-width="2"/>
+    <text x="18" y="27" font-weight="700" font-size="14">memory_system.v  (top: picks Harvard or shared)</text>
+    <rect x="25" y="45" width="230" height="185" rx="8" fill="#fff" stroke="#145f9b" stroke-width="2.5"/>
+    <text x="140" y="68" text-anchor="middle" font-weight="700" fill="#145f9b" font-size="14">simple_controller.v</text>
+    <rect x="42" y="82" width="196" height="40" rx="6" fill="#cfe3f5"/><text x="140" y="107" text-anchor="middle" font-size="12.5">program_counter.v</text>
+    <rect x="42" y="130" width="196" height="40" rx="6" fill="#cfe3f5"/><text x="140" y="155" text-anchor="middle" font-size="12.5">read_write_control.v</text>
+    <text x="140" y="196" text-anchor="middle" font-size="11.5" fill="#5b6b7b">+ IR, ACC, valid, halt, fault</text>
+    <rect x="330" y="45" width="165" height="80" rx="8" fill="#fff" stroke="#145f9b" stroke-width="2.5"/>
+    <text x="412" y="75" text-anchor="middle" font-weight="700" fill="#145f9b" font-size="12.5">Harvard only</text>
+    <text x="412" y="95" text-anchor="middle" font-size="12">instruction_memory.v</text><text x="412" y="112" text-anchor="middle" font-size="12">data_memory.v</text>
+    <rect x="330" y="145" width="355" height="85" rx="8" fill="#fff" stroke="#a54c13" stroke-width="2.5"/>
+    <text x="507" y="170" text-anchor="middle" font-weight="700" fill="#a54c13" font-size="12.5">Shared only</text>
+    <text x="507" y="192" text-anchor="middle" font-size="12">address_decoder.v  &rarr;  shared_memory.v</text>
+    <text x="507" y="212" text-anchor="middle" font-size="11" fill="#5b6b7b">(32 bytes, one port)</text>
+    <path d="M255,85 L330,85" stroke="#172638" stroke-width="2" marker-end="url(#b)"/>
+    <path d="M255,185 L330,185" stroke="#172638" stroke-width="2" marker-end="url(#b)"/>
+  </svg>
+
+  <table>
+    <tr><th style="width:27%">File (rtl/)</th><th>Job</th><th style="width:16%">Used in</th></tr>
+    <tr><td><code>program_counter.v</code></td><td>Counts up the instruction address, but <b>only when a fetch is accepted</b>.</td><td>Both</td></tr>
+    <tr><td><code>instruction_memory.v</code></td><td>16 bytes, loaded from <code>programs/demo.hex</code>. Read-only.</td><td>Harvard</td></tr>
+    <tr><td><code>data_memory.v</code></td><td>16 bytes, loaded from <code>programs/data.hex</code>. Read; write on the clock edge. Reset does not erase it.</td><td>Harvard</td></tr>
+    <tr><td><code>read_write_control.v</code></td><td>Decodes the instruction's top nibble into LOAD / STORE / HALT / illegal.</td><td>Both</td></tr>
+    <tr><td><code>simple_controller.v</code></td><td>The brain: holds IR, ACC, valid, halted, fault; decides when to fetch and when to read/write.</td><td>Both</td></tr>
+    <tr><td><code>address_decoder.v</code></td><td>One-line mux: data access gives address 16-31, otherwise 0-15.</td><td>Shared</td></tr>
+    <tr><td><code>shared_memory.v</code></td><td>32 bytes behind a single port; same read/write behaviour.</td><td>Shared</td></tr>
+    <tr><td><code>memory_system.v</code></td><td>Plugs the same controller into either memory arrangement.</td><td>Both</td></tr>
+  </table>
+
+  <h3>Other things in the repository</h3>
+  <table>
+    <tr><td style="width:27%"><code>tb/tb_memory_compare.v</code></td><td>Runs both designs side by side, counts cycles, and <b>fails loudly</b> if anything is wrong.</td></tr>
+    <tr><td><code>programs/*.hex</code></td><td>The program (<code>10 21 F0 ...</code>) and the starting data (<code>07 00 00 ...</code>).</td></tr>
+    <tr><td><code>results/</code></td><td>Saved outputs: cycle table, CSVs, waveforms (<code>.vcd</code>).</td></tr>
+    <tr><td><code>docs/</code>, <code>output/pdf/</code></td><td>Explanations, requirement checklist, IEEE report (LaTeX source + PDF), figures, video script.</td></tr>
+    <tr><td><code>Makefile</code></td><td>Shortcuts: <code>make demo</code>, <code>make test</code>, <code>make figures</code>, <code>make report</code>.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 7 KEY RULE ============ -->
+<section class="page">
+  <h2>7. The one rule that creates the difference</h2>
+  <p>Open <code>rtl/simple_controller.v</code>. Everything above comes from four lines:</p>
+<pre>assign data_read_enable  = running && execute_valid && load;
+assign data_write_enable = running && execute_valid && store;
+<span class="hl">assign fetch_enable = running && !stop_now &amp;&amp; !(SHARED_BUS &amp;&amp; data_access);</span></pre>
+  <ul>
+    <li><b>LOAD / STORE</b> raise a data read / write signal while their instruction is running.</li>
+    <li><b>Fetch</b> is allowed unless the processor is halting, <b>or</b> (shared mode <i>and</i> a data access is happening).</li>
+    <li>In Harvard mode <code>SHARED_BUS</code> is 0, so that last part is always false: fetch never waits.</li>
+  </ul>
+
+  <h3>What blocking a fetch does</h3>
+  <ol>
+    <li><code>fetch_enable</code> = 0, so the PC does not advance (it only counts when a fetch is accepted).</li>
+    <li>The valid bit is loaded with 0, so next cycle nothing runs twice.</li>
+    <li>Next cycle the data access is over, <code>fetch_enable</code> = 1, and the delayed instruction is fetched.</li>
+  </ol>
+
+  <h3>Timing rules in one box</h3>
+  <div class="callout">
+    <ol style="margin:0">
+      <li><b>Reads</b> are instant (combinational). <b>LOAD</b> captures the value at the rising edge. <b>STORE</b> writes at the rising edge.</li>
+      <li>A shared data access blocks the fetch, so the PC holds for one cycle.</li>
+      <li><b>Reset</b> clears the controller and suppresses all requests, but keeps memory contents. <b>HALT</b> stops all further requests.</li>
+    </ol>
+  </div>
+
+  <h3>The address decoder (shared mode)</h3>
+<pre>physical_address = data_select ? {1'b1, data_address}      // 16..31 : data
+                               : {1'b0, instruction_address}; //  0..15 : instructions</pre>
+  <p>The top bit of the 5-bit address says "instruction side" (0) or "data side" (1). That is the whole mapping.</p>
+
+  <h3>Known limits of the model (good to know before an interview)</h3>
+  <ul>
+    <li>Programs must fit in 16 bytes and finish with HALT. The 4-bit PC wraps around otherwise.</li>
+    <li>No jumps or branches, no arithmetic. Only LOAD, STORE, HALT, NOP.</li>
+    <li>Memory reads are combinational and writes happen on the rising edge: this is a simplified model, not a specific chip.</li>
+    <li>The 10 ns clock is a simulation setting. FPGA resources and real frequency were <b>not</b> measured.</li>
+  </ul>
+</section>
+
+<!-- ============ 8 TESTS ============ -->
+<section class="page">
+  <h2>8. Tests, results and how to run everything</h2>
+  <h3>Run it yourself (needs Icarus Verilog, Make, Python 3)</h3>
+<pre>cd MCA_Project
+make demo     # the 6-cycle table, prints DEMO PASSED
+make test     # all six scenarios, prints ALL TESTS PASSED (6 scenarios)</pre>
+  <p class="small">Install on macOS: <code>brew install icarus-verilog</code>. On Ubuntu/Debian: <code>sudo apt-get install iverilog make python3</code>.</p>
+
+  <h3>The six scenarios and the results we measured</h3>
+  <table>
+    <tr><th>#</th><th>Scenario</th><th>Why it exists</th><th>Harvard</th><th>Shared</th></tr>
+    <tr><td>1</td><td><b>demo</b>: LOAD 0, STORE 1, HALT</td><td>The main comparison</td><td>4</td><td>6</td></tr>
+    <tr><td>2</td><td><b>address boundaries</b></td><td>Uses data addresses 0 and 15; a STORE right before a LOAD of the same address</td><td>6</td><td>10</td></tr>
+    <tr><td>3</td><td><b>no data access</b>: two NOPs, HALT</td><td>Shows the gain depends on the program</td><td>4</td><td>4</td></tr>
+    <tr><td>4</td><td><b>HALT only</b></td><td>Stops immediately, no traffic</td><td>2</td><td>2</td></tr>
+    <tr><td>5</td><td><b>illegal opcode</b></td><td>Stops with the fault flag set</td><td>2</td><td>2</td></tr>
+    <tr><td>6</td><td><b>reset and restart</b></td><td>Reset mid-program, memory kept, restart, longer copy chain</td><td>8</td><td>14</td></tr>
+  </table>
+  <p class="small">Cycle count starts at the first clock edge after reset is released and includes the HALT cycle.</p>
+
+  <h3>What the testbench checks automatically</h3>
+  <ul class="plain">
+    <li class="ok">Every data word ends with the expected value, in both designs.</li>
+    <li class="ok">Instructions are never changed.</li>
+    <li class="ok">Each LOAD / STORE happens exactly once (no repeats).</li>
+    <li class="ok">PC advances only on a fetch, and holds during a blocked fetch.</li>
+    <li class="ok">In shared mode, fetch and data access never happen in the same cycle.</li>
+    <li class="ok">After HALT nothing touches memory; ACC is held.</li>
+  </ul>
+
+  <h3>Where the evidence lives</h3>
+  <table>
+    <tr><td style="width:30%"><code>results/demo_output.txt</code></td><td>The readable cycle table from <code>make demo</code> (F/R/W = fetch / read / write).</td></tr>
+    <tr><td><code>results/test_output.txt</code>, <code>summary.csv</code></td><td>All six test results.</td></tr>
+    <tr><td><code>results/demo.vcd</code></td><td>Waveform. Open in a viewer such as GTKWave (not installed on this Mac). Look under <code>tb_memory_compare.h</code> (Harvard) and <code>.s</code> (shared).</td></tr>
+    <tr><td><code>output/pdf/HEXARCH_Phase_I_Report_Draft.pdf</code></td><td>2-page IEEE-format report draft.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 9 REVIEW ============ -->
+<section class="page">
+  <h2>9. Review: what was checked, what is still open</h2>
+  <div class="cols">
+    <div>
+      <h3 class="green">Checked and correct</h3>
+      <ul class="plain">
+        <li class="ok">Clean rebuild: <b>6 of 6 scenarios pass</b>, and the demo prints DEMO PASSED.</li>
+        <li class="ok">Compiler (<code>iverilog -Wall</code>, v13.0): <b>zero warnings</b>.</li>
+        <li class="ok">Cycle table in the guide, README and report matches the real simulation trace (4 vs 6).</li>
+        <li class="ok">All design claims were traced through the code (PC hold, valid bit, shared priority, reset keeps memory, HALT stops traffic).</li>
+        <li class="ok">Report PDF is rebuilt from its LaTeX source and the text is identical. Two pages, no layout errors.</li>
+        <li class="ok">GitHub repo exists (private) and its latest commit equals the local one.</li>
+        <li class="ok">No junk files tracked (<code>build/</code>, <code>tmp/</code>, <code>.DS_Store</code> are ignored).</li>
+      </ul>
+      <h3 class="blue">Fixed during this review</h3>
+      <ul>
+        <li><code>docs/VIDEO_SCRIPT.md</code> said the GitHub repo was "not yet published". It is. Line corrected.</li>
+        <li>In the architecture diagram, the "read data" label touched the Address decoder box. Moved and regenerated.</li>
+        <li>Added word-for-word scripts: <code>docs/MEMBER_SCRIPTS.md</code>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="orange">Still open (not code bugs, these decide your marks)</h3>
+      <ul class="plain">
+        <li class="warn"><b>Video not recorded</b> (15 marks). Max 5 minutes, all five names, working demo.</li>
+        <li class="warn"><b>Git history is one commit, by Mitul.</b> The brief rewards meaningful <i>individual</i> history. Each member must make a real change from their own account.</li>
+        <li class="warn">Report section "Individual Contributions" is still <b>proposed</b>. Replace with what each person really did, then delete the draft notice and rebuild.</li>
+        <li class="warn">Video link not yet in <code>VIDEO.md</code>.</li>
+        <li class="warn">Evaluators and teammates need <b>access to the private repository</b>.</li>
+        <li class="warn">Submission form not submitted. Deadline <b>16 Nov 2026, 11:59 PM IST</b>.</li>
+        <li class="warn">Two Microchip citations in the report could not be re-opened from this machine (the pages timed out). Open both links once and confirm they say what the report claims. The third (Icarus Verilog) was confirmed.</li>
+        <li class="warn">README and docs say starter code was made with AI assistance. Keep that honest and have each member be able to explain their own part.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin:6px 0">
+    <b>Verdict.</b> The technical project is correct and complete for its stated scope. What remains is people work: real individual commits, the video, and submission.
+  </div>
+
+  <h3 style="margin-top:8px">Suggested real contribution for each member (small, honest, doable)</h3>
+  <table>
+    <tr><th style="width:17%">Member</th><th>Own this part</th><th>A real improvement they could make</th></tr>
+    <tr><td>Akshat</td><td>Instruction memory, PC</td><td>Add a test: a program longer than 3 instructions, or one that checks PC wrap-around behaviour</td></tr>
+    <tr><td>Ajeesh</td><td>Data memory, read/write control</td><td>Add a test that reset keeps memory; document the read/write timing in a short note</td></tr>
+    <tr><td>Vaibhav</td><td>Shared memory, address decoder</td><td>Add an annotated example showing the physical address for LOAD 0 and STORE 1 in shared mode</td></tr>
+    <tr><td>Hardik</td><td>Testbench, waveforms</td><td>Add a new scenario with its measured cycle count and a short waveform note</td></tr>
+    <tr><td>Mitul</td><td>Integration, report, video</td><td>Final report update, video link in <code>VIDEO.md</code>, repository access check</td></tr>
+  </table>
+  <p class="small" style="margin:2px 0 0">Never split existing files into fake commits or commit as someone else.</p>
+</section>
+
+<!-- ============ 10 QA ============ -->
+<section class="page">
+  <h2>10. Questions you may be asked</h2>
+  <table>
+    <tr><th style="width:36%">Question</th><th>Short answer</th></tr>
+    <tr><td>What is a Harvard architecture?</td><td>Separate memories and buses for instructions and data, so both can be accessed in the same cycle.</td></tr>
+    <tr><td>What is the shared alternative called?</td><td>Von Neumann style: one memory for both. With a single port, only one access per cycle.</td></tr>
+    <tr><td>Why 4 cycles versus 6?</td><td>Two of the program's instructions (LOAD, STORE) use data memory. In shared mode each blocks the next fetch for one cycle: 4 + 2 = 6.</td></tr>
+    <tr><td>Is Harvard always faster?</td><td>No. With no data accesses both take 4 cycles (our no-data test). It helps when fetch and data access would compete.</td></tr>
+    <tr><td>Why is there a valid bit?</td><td>When a fetch is blocked the IR still holds the old instruction. The valid bit says "nothing new", so it does not run twice.</td></tr>
+    <tr><td>Why only one instruction register?</td><td>That is enough to overlap "execute current" with "fetch next", which is all the demo needs.</td></tr>
+    <tr><td>What does reset do?</td><td>Clears PC, ACC, IR, valid, halted, fault and stops memory requests. Memory contents are kept (tested).</td></tr>
+    <tr><td>What happens with an unknown opcode?</td><td>The controller halts and sets the <code>fault</code> flag (tested).</td></tr>
+    <tr><td>What if a program has no HALT?</td><td>The 4-bit PC wraps after 16 instructions and the program repeats. The unused image bytes are filled with HALT (<code>F0</code>) to avoid this in our programs.</td></tr>
+    <tr><td>How do you know both designs are fair?</td><td>Same controller, same program and data, same 32-byte total, same clock period. Only the memory wiring differs.</td></tr>
+    <tr><td>How did you verify correctness?</td><td>An automatic testbench with six scenarios checks every data word, access counts, PC behaviour, port ownership and halt behaviour.</td></tr>
+    <tr><td>What is not covered?</td><td>Caches, branches, a full instruction set, synthesis or FPGA measurement, real clock speed. The optional lower-level shared memory is omitted.</td></tr>
+    <tr><td>Did you use AI?</td><td>The repository states starter code and drafts were prepared with AI assistance. Be ready to explain your own part and your own commits honestly.</td></tr>
+    <tr><td>What does F/R/W mean in the output?</td><td>Instruction fetch / data read / data write.</td></tr>
+  </table>
+
+  <h3>If they ask you to open a file and explain</h3>
+  <ul>
+    <li><b>Waveform:</b> open <code>results/demo.vcd</code>. Show <code>clk</code>, <code>pc</code>, <code>instruction_register</code>, <code>execute_valid</code>, <code>fetch_enable</code>, <code>data_read_enable</code>, <code>data_write_enable</code>, <code>accumulator</code>, <code>halted</code> for both <code>h</code> and <code>s</code>.</li>
+    <li><b>Code:</b> go straight to the <code>fetch_enable</code> line in <code>simple_controller.v</code>, then <code>address_decoder.v</code>.</li>
+  </ul>
+</section>
+
+<!-- ============ 11 SCRIPTS ============ -->
+<section class="page">
+  <h2>11. Video scripts for all five members</h2>
+  <p>Total about 470 words, roughly <b>3 min 35 s</b> at a relaxed pace (the limit is 5 minutes). Read your part twice, then practise it with the screen action. Keep all five names visible on screen. The same text is saved in <code>docs/MEMBER_SCRIPTS.md</code>.</p>
+
+  <div class="member">
+    <div class="t">0:00 - 0:20 &nbsp;|&nbsp; All five &nbsp;|&nbsp; Opening</div>
+    <div class="show">Show: title slide or README with all five names.</div>
+    <div class="say">
+      <b>Akshat:</b> "Hi, I'm Akshat Chauhan."<br>
+      <b>Ajeesh:</b> "I'm Ajeesh Amreet."<br>
+      <b>Vaibhav:</b> "I'm Vaibhav."<br>
+      <b>Hardik:</b> "I'm Hardik Maheshwari."<br>
+      <b>Mitul:</b> "And I'm Mitul Bhatia. We are Team HEXARCH, Section A. Our project is Instruction and Data Memory Hierarchy."
+    </div>
+  </div>
+
+  <div class="member">
+    <div class="t">0:20 - 0:55 &nbsp;|&nbsp; Akshat &nbsp;|&nbsp; The idea and the instruction path</div>
+    <div class="show">Show: <code>docs/figures/architecture.png</code>, pointing at the Harvard half.</div>
+    <div class="say">"Instructions say what to do. Data is the value being worked on. We compare two ways of storing them. In a Harvard design, instructions and data have separate memories and ports, so the processor can fetch the next instruction while the current one uses data. In a shared design, both sit in one memory with one port, so they take turns. The program counter, or PC, picks the next instruction, and one instruction register holds the instruction that is running now."</div>
+  </div>
+
+  <div class="member">
+    <div class="t">0:55 - 1:30 &nbsp;|&nbsp; Ajeesh &nbsp;|&nbsp; The program and data memory</div>
+    <div class="show">Show: the three-line program in the README, then <code>programs/demo.hex</code>.</div>
+    <div class="say">"Our program is LOAD 0, STORE 1, and HALT. In memory these are the bytes 10, 21 and F0: the first digit is the operation, the second is the data address. Data address 0 starts with the value 7. LOAD copies the 7 into the accumulator, a single eight-bit register. STORE writes it into data address 1. HALT stops. Reads are immediate; the writes happen on the rising clock edge. Both designs must end with 7 at data address 1."</div>
+  </div>
+
+  <div class="member">
+    <div class="t">1:30 - 2:00 &nbsp;|&nbsp; Vaibhav &nbsp;|&nbsp; Why shared memory has to wait</div>
+    <div class="show">Show: the Shared half of the diagram, then <code>rtl/address_decoder.v</code> and the <code>fetch_enable</code> line in <code>rtl/simple_controller.v</code>.</div>
+    <div class="say">"Both designs hold 32 bytes in total. In the shared one, the address decoder maps instructions to addresses 0 to 15 and data to 16 to 31, behind one port. When LOAD or STORE needs that port, data wins: the next fetch is blocked, the program counter holds, and the instruction is fetched a cycle later. In the code this is one rule: fetch is switched off whenever shared mode has a data access."</div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>11. Video scripts (continued)</h2>
+
+  <div class="member">
+    <div class="t">2:00 - 3:00 &nbsp;|&nbsp; Hardik &nbsp;|&nbsp; Live demo</div>
+    <div class="show">Run: <code>make demo</code>. Then show <code>docs/figures/waveforms.png</code> or open <code>results/demo.vcd</code>.</div>
+    <div class="say">"Let's run make demo. Each row is one clock cycle; F, R and W mean fetch, data read and data write. In cycle 2, Harvard fetches STORE while LOAD reads data, so fetch and read are both 1. Shared memory cannot: its fetch is 0, because the single port is busy. In cycle 3, Harvard fetches HALT while STORE writes the 7. Harvard executes HALT in cycle 4, so it finishes in four cycles. Shared memory fetches STORE in cycle 3, writes in cycle 4, fetches HALT in cycle 5 and executes it in cycle 6. Six cycles; the extra two are the two blocked fetches. Both designs end with 7 at data address 1."</div>
+  </div>
+
+  <div class="member">
+    <div class="t">3:00 - 3:30 &nbsp;|&nbsp; Mitul &nbsp;|&nbsp; Verification and wrap-up</div>
+    <div class="show">Run: <code>make test</code>. Show the six PASS lines, the report PDF and the repository.</div>
+    <div class="say">"Finally, make test runs six scenarios, including boundary addresses, HALT only, an invalid opcode and a mid-program reset. All six pass. The program with no data accesses takes four cycles in both designs, so separate paths only help when a fetch and a data access would otherwise compete. This is a simulation of one small model, not a universal speedup claim. Our repository has the Verilog, testbench, diagrams, waveforms, results and an IEEE-format report. <b>[Say the team's real remaining work here.]</b> Thank you."</div>
+  </div>
+
+  <h3>Recording checklist</h3>
+  <ul class="plain">
+    <li>&#9744; Everyone has run <code>make demo</code> and <code>make test</code> on their own laptop first.</li>
+    <li>&#9744; Terminal font large enough to read; run <code>clear</code> before <code>make demo</code>.</li>
+    <li>&#9744; Open the diagram, waveform image and the three code files in advance, in tabs.</li>
+    <li>&#9744; Each person says their own full name clearly in the opening.</li>
+    <li>&#9744; Total length at or below 5:00. Upload, then test the link from a different account.</li>
+    <li>&#9744; Put the final link and duration into <code>VIDEO.md</code>.</li>
+  </ul>
+  <div class="callout o">
+    <b>Replace the bracket in Mitul's last paragraph</b> with the true state on recording day, for example which contributions each person has finished. Do not claim work that is not in the repository.
+  </div>
+</section>
+
+</body>
+</html>
