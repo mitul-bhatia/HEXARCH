@@ -1,5 +1,7 @@
 # Prototype video: target 3 minutes 30 seconds
 
+Word-for-word speaking text for every member is in [MEMBER_SCRIPTS.md](MEMBER_SCRIPTS.md).
+
 Team HEXARCH, Section A. Introduce all five names and show the actual simulation. This is a recording script; the video has not been recorded. Adjust speaking roles to match the work each member has completed.
 
 | Time | Speaker | Show and explain |
@@ -47,4 +49,4 @@ Run `make test` and show the PASS lines, report PDF, and project files.
 
 “All six verification scenarios pass, including boundary addresses and reset. A program without data accesses takes the same number of cycles in both designs. Our artifacts include Verilog RTL, a testbench, block diagrams, waveforms, measured results, and an IEEE-format report draft.”
 
-Finish by stating the team's actual remaining work. Refer to the local project folder until the GitHub repository is published. Add the final recording link and duration to `VIDEO.md`, check access, and keep the video **at most five minutes**.
+Finish by stating the team's actual remaining work and point to the private GitHub repository (github.com/mitul-bhatia/HEXARCH). Add the final recording link and duration to `VIDEO.md`, check access, and keep the video **at most five minutes**.

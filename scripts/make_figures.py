@@ -69,7 +69,7 @@ parts += [line(45, 444, 1155, 444, "#ccd4dc", 1),
           line(700, 563, 795, 563, arrow=True),
           '<path d="M795,611 L750,611 L750,655 L195,655 L195,633" '
           f'fill="none" stroke="{INK}" stroke-width="2" marker-end="url(#arrow)"/>',
-          text(520, 647, "read data", 18, anchor="middle"),
+          text(392, 647, "read data", 18, anchor="middle"),
           text(45, 683, "Addresses 0-15: instructions. Addresses 16-31: data. LOAD / STORE pauses fetch.", 21)]
 save("architecture.svg", 1200, 720, parts)
 

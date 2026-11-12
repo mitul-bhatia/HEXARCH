@@ -46,6 +46,7 @@ Counts include the first fetch and HALT execution; reset is excluded. These resu
 
 ## What to open
 
+- [Illustrated study guide (PDF)](output/pdf/HEXARCH_Study_Guide.pdf): start here if you are new to the project.
 - [Simple explanation](docs/PROJECT_GUIDE.md): the six-cycle walkthrough and module guide.
 - [Requirements checklist](docs/REQUIREMENTS.md): each requested deliverable and its evidence.
 - [Two-page IEEE report draft](output/pdf/HEXARCH_Phase_I_Report_Draft.pdf), with editable [LaTeX source](docs/report/phase1_report.tex).
