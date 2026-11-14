@@ -1,77 +1,47 @@
-# Team HEXARCH and submission plan
+# Team HEXARCH: roles and submission plan
 
-## Roster supplied by the team
+Section **A** · Project 9 · Phase I deadline **16 November 2026, 11:59 PM IST**.
 
-Section: **A**, confirmed by Mitul on November 8, 2026. All five members must belong to the same section.
+## Roles
 
-| Member | Enrolment number | Institutional email |
-| --- | --- | --- |
-| Akshat Chauhan | 2401010055 | akshat.chauhan2024@nst.rishihood.edu.in |
-| Ajeesh Amreet | 2401010048 | ajeesh.amreet2024@nst.rishihood.edu.in |
-| Vaibhav | 2401010486 | vaibhav.2024@nst.rishihood.edu.in |
-| Hardik Maheshwari | 2401010174 | h.maheshwari2024@nst.rishihood.edu.in |
-| Mitul Bhatia | 2401010279 | mitul.bhatia2024@nst.rishihood.edu.in |
+This table is the single source of truth. The report (Table II), the video guide and the starter tasks use the same split.
 
-Response email: `mitul.bhatia2024@nst.rishihood.edu.in`.
+| Member | Owns | Presents in the video | Starter task |
+| --- | --- | --- | --- |
+| Akshat Chauhan | Instruction path: `rtl/program_counter.v`, `rtl/instruction_memory.v`, `programs/demo.hex` | Scene 2: the idea, Harvard half of the diagram, program counter | [Full 16-byte program test](MEMBER_TASKS.md#akshat) |
+| Ajeesh Amreet | Data path: `rtl/data_memory.v`, `rtl/read_write_control.v`, `programs/data.hex` | Scene 3: the program and data-memory timing | [New data-pattern test](MEMBER_TASKS.md#ajeesh) |
+| Vaibhav | Shared memory: `rtl/shared_memory.v`, `rtl/address_decoder.v`, the fetch-stall rule | Scene 4: why shared memory waits | [Physical-address checks](MEMBER_TASKS.md#vaibhav) |
+| Hardik Maheshwari | Simulation: `tb/`, `results/`, waveforms | Scenes 5-6: `make demo`, waveform, `make test` | [Memory-instruction sweep and waveform memory](MEMBER_TASKS.md#hardik) |
+| Mitul Bhatia | Integration: `rtl/memory_system.v`, `rtl/simple_controller.v`, `Makefile`, `scripts/`, report, repository, video | Scenes 1 and 7, and drives the recording | [Merge, report, video link, submission](MEMBER_TASKS.md#mitul) |
 
-## Proposed work split: review with all five members
+Every member should be able to explain the whole project, not only their own part. The [study guide](https://mitul-bhatia.github.io/HEXARCH/) explains it from zero.
 
-These are suggested responsibilities, not claims that members have completed work. Every member should understand the overall project as well as their part.
-
-| Member | Small, meaningful responsibility | Evidence to add |
-| --- | --- | --- |
-| Akshat | Instruction memory and PC; add a targeted instruction-fetch test or improvement | Code/test commit and short explanation |
-| Ajeesh | Data memory, read/write control, reset retention | Code/test commit and timing explanation |
-| Vaibhav | Shared memory and address decoder; explain priority and mapping | Code/test commit and annotated example |
-| Hardik | Testbench, waveform inspection, additional justified scenario | Test commit and measured waveform note |
-| Mitul | Integration, report review, comparison, repository and video assembly | Integration/document commits and measured-results review |
-
-Starter code and draft text were prepared with AI assistance. Each member should verify their part, make a real improvement, and record what they actually did. Do not split existing files into fake commits or use another student's identity to manufacture contribution history.
-
-## Simple schedule
-
-The dates below are a proposed plan based on the supplied November 16 deadline, not newly announced course dates.
+## Schedule (from 14 November)
 
 | Date (IST) | Goal |
 | --- | --- |
-| November 7-9 | Each member runs the prototype and explains their assigned module |
-| November 10-12 | Each member contributes a real code, test, or documentation improvement |
-| November 13 | Review report, references, measured results, roster, and actual contributions |
-| November 14 | Record a group prototype video, targeting 3 minutes 30 seconds |
-| November 15 | Final repository review, video-link access check, and interview rehearsal |
-| November 16 | Submit well before 11:59 PM IST |
+| 14 Nov | Mitul invites the four members to the repository. Everyone runs `make demo` and `make test` on their own machine. |
+| 14-15 Nov | Each member finishes their starter task and opens a pull request from their own GitHub account. Someone else reviews it; Mitul merges and regenerates `results/`. |
+| 15 Nov | Record the video ([recording guide](VIDEO_SCRIPT.md)), upload it, put the link in [`VIDEO.md`](../VIDEO.md). |
+| 15 Nov | Final report check, `make report`, commit the PDF. |
+| 16 Nov | Check everything from a logged-out browser, then submit the form, well before 11:59 PM IST. |
 
-## Phase I: 30% weightage
+## Phase I checklist
 
-| Requirement | Marks | Current status |
-| --- | ---: | --- |
-| IEEE report with abstract, literature review, proposed solution, individual contributions, references | 10 | Draft PDF and editable LaTeX ready; team review and actual contribution evidence remain |
-| Prototype video, at most 5 minutes, naming all five members and showing working progress | 15 | Script ready; video recording and link remain |
-| GitHub repository with report, video link, implementation, artifacts, meaningful individual history | 5 | Private [HEXARCH repository](https://github.com/mitul-bhatia/HEXARCH) created; member contributions, video link, and evaluator access remain |
+| Rubric item | Marks | Where it is | Still to do |
+| --- | ---: | --- | --- |
+| IEEE report: abstract, literature review, proposed solution, individual contributions, references | 10 | [`output/pdf/HEXARCH_Phase_I_Report.pdf`](../output/pdf/HEXARCH_Phase_I_Report.pdf), source in `docs/report/` | Rebuild after the member pull requests are merged |
+| Prototype video, at most 5 minutes, idea, all five names, working prototype | 15 | [Recording guide](VIDEO_SCRIPT.md), title card in `docs/video/` | Record, upload, add the link to `VIDEO.md` |
+| GitHub: report, video link, prototype files, artefacts, individual history | 5 | This repository | Every member's own commits; the video link |
 
-The draft also includes preliminary results and a conclusion so it can be extended for Phase II.
+- [x] Section confirmed: A.
+- [x] Repository: https://github.com/mitul-bhatia/HEXARCH (public, so evaluators can open it).
+- [ ] All four members invited as collaborators and have accepted.
+- [ ] Each member's starter-task pull request merged from their own account.
+- [ ] Video recorded, at most 5:00, uploaded with link access for anyone; link and duration in `VIDEO.md`.
+- [ ] After the merges: scenario count and report Tables I and II updated, then `make report guide`.
+- [ ] Repository link submitted through the form: https://docs.google.com/forms/d/e/1FAIpQLSc6Cx8OrOQLGj_X2ZMkyG5jc8mokq36mGRq2x8jGRNV1sbegA/viewform
 
-Supplied submission form: https://docs.google.com/forms/d/e/1FAIpQLSc6Cx8OrOQLGj_X2ZMkyG5jc8mokq36mGRq2x8jGRNV1sbegA/viewform
+## Phase II (70%)
 
-No response has been submitted. The form's current state has not been checked.
-
-## Before submitting
-
-- [x] Confirm the common section: A.
-- [ ] Review every member's name, enrolment number, and email before submitting.
-- [ ] Have all five members run `make demo`, then `make test`, and explain the design.
-- [ ] Review and merge authentic individual contributions through each member's own account.
-- [ ] Replace proposed report contributions with completed work and commit references.
-- [ ] Remove the report's draft notice after the team finishes its review.
-- [ ] Rebuild the PDF after final edits; verify all pages and all six test scenarios.
-- [ ] Record the video, introduce all five members, and keep duration at or below 5 minutes.
-- [ ] Add a working video link to `VIDEO.md`; verify evaluator access.
-- [x] Create the private GitHub repository: https://github.com/mitul-bhatia/HEXARCH.
-- [ ] Verify teammate and evaluator access to the repository, report, source, results, and final video link.
-- [ ] Submit the correct repository link through the supplied form by November 16, 2026, 11:59 PM IST.
-
-## Phase II: 70% weightage
-
-Continue maintaining the same repository and individual contribution history. Finalize abstract, literature review, proposed solution, results/discussion, individual contributions, conclusion, and references. Record each new experiment with its program, assumptions, expected result, and measured cycles. Rehearse the interview using `PROJECT_GUIDE.md` and each member's real commits.
-
-Exact Phase II interview slots and additional evaluation details were not included in the notice.
+Keep developing the same repository with the same individual history. Each member should be ready to explain the design and their own commits in the interview; the [study guide](https://mitul-bhatia.github.io/HEXARCH/) has likely questions. Possible extensions: the optional shared lower-level memory, a synchronous-read memory model, and synthesis results.

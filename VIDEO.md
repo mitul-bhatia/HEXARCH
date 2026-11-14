@@ -1,10 +1,8 @@
 # Prototype demonstration video
 
-**Status: not recorded yet.**
+**Video link:** _not recorded yet_
+**Duration:** _-_
 
-The suggested 3-minute-30-second recording script is in
-[docs/VIDEO_SCRIPT.md](docs/VIDEO_SCRIPT.md).
+How to record it, scene by scene and word for word: [docs/VIDEO_SCRIPT.md](docs/VIDEO_SCRIPT.md).
 
-After the team records the video, replace this status with the actual video
-link and duration. Introduce all five members, demonstrate the working
-prototype, keep the video at or below five minutes, and check evaluator access.
+After uploading (YouTube *Unlisted*, or Google Drive with *Anyone with the link → Viewer*), replace the two lines above with the real link and duration, and check that the link plays in a logged-out browser window.
