@@ -10,4 +10,4 @@ Cycle | Harvard F/R/W | Shared F/R/W | ACC H/S after edge | HALT H/S
   6   |     0/0/0     |    0/0/0     |       7/7        |   1/1
 PASS demo               Harvard=4 shared=6 overlap=2 stalls=2 ACC=7
 DEMO PASSED: data[1]=7 in both designs. Harvard=4 cycles; shared=6 cycles.
-tb/tb_memory_compare.v:172: $finish called at 96000 (1ps)
+tb/tb_memory_compare.v:186: $finish called at 96000 (1ps)

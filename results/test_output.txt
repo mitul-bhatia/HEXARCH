@@ -6,4 +6,4 @@ PASS halt_only          Harvard=2 shared=2 overlap=0 stalls=0 ACC=0
 PASS illegal_opcode     Harvard=2 shared=2 overlap=0 stalls=0 ACC=0
 PASS reset_and_restart  Harvard=8 shared=14 overlap=6 stalls=6 ACC=7
 ALL TESTS PASSED (6 scenarios)
-tb/tb_memory_compare.v:193: $finish called at 616000 (1ps)
+tb/tb_memory_compare.v:219: $finish called at 616000 (1ps)

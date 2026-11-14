@@ -28,6 +28,7 @@ module tb_memory_compare;
     reg [3:0] hp, sp;
     reg hf, sf, hrd, hwr, srd, swr;
     reg boot_verified = 0;
+    integer scenarios = 0;
     reg demo_only;
 
     task check(input condition, input string message);
@@ -62,6 +63,16 @@ module tb_memory_compare;
                     seed[0]=7;
                     expected[0]=7; expected[1]=7; expected[2]=7; expected[3]=7;
                 end
+                // ---- Mode 6 (Akshat): add the full 16-byte program case here. ----
+
+
+                // ---- Mode 7 (Ajeesh): add the new data-pattern case here. ----
+
+
+                // ---- Mode 8 (Vaibhav): add a case here if your checks need one. ----
+
+
+                // ---- Modes 9-11 (Hardik): add the memory-instruction sweep cases here. ----
             endcase
             // Load identical images into both architectures while held in reset.
             for (i = 0; i < 16; i = i + 1) begin
@@ -92,7 +103,7 @@ module tb_memory_compare;
         begin
             cycles=0; hc=0; sc=0; overlaps=0; stalls=0; hr=0; hw=0; sr=0; sw=0;
             if (record_trace) begin
-                trace = $fopen("results/demo_trace.csv", "w");
+                trace = $fopen("build/demo_trace.csv", "w");
                 check(trace != 0, "trace file opens");
                 $fwrite(trace, "cycle,h_pc,h_ir,h_valid,h_fetch,h_read,h_write,h_acc_before,s_pc,s_ir,s_valid,s_fetch,s_read,s_write,s_acc_before,h_acc_after,s_acc_after,h_halted_after,s_halted_after\n");
                 if (demo_only) begin
@@ -149,6 +160,7 @@ module tb_memory_compare;
                       "halt suppresses all traffic");
                 check(h_acc === final_acc && s_acc === final_acc, "halt holds accumulator");
             end
+            scenarios = scenarios + 1;
             $display("PASS %-18s Harvard=%0d shared=%0d overlap=%0d stalls=%0d ACC=%0d",
                      label_name,hc,sc,overlaps,stalls,h_acc);
             $fwrite(summary, "%s,%0d,%0d,%0d,%0d,%0d,%0d\n",
@@ -161,11 +173,13 @@ module tb_memory_compare;
         if (demo_only) $dumpfile("build/demo.vcd");
         else $dumpfile("build/memory_compare.vcd");
         $dumpvars(0, tb_memory_compare);
-        if (demo_only) summary=$fopen("results/demo_summary.csv", "w");
-        else summary=$fopen("results/summary.csv", "w");
+        // ---- Hardik: extra $dumpvars lines go here (they must run at time 0). ----
+
+        if (demo_only) summary=$fopen("build/demo_summary.csv", "w");
+        else summary=$fopen("build/summary.csv", "w");
         check(summary != 0, "summary file opens");
         $fwrite(summary, "case,harvard_cycles,shared_cycles,overlap_cycles,shared_stalls,accumulator,fault\n");
-        prepare(0); run_checked("demo",4,6,2,7,0,1);
+        prepare(0); run_checked("demo",4,6,2,7,0,demo_only);
         if (demo_only) begin
             $fclose(summary);
             $display("DEMO PASSED: data[1]=7 in both designs. Harvard=4 cycles; shared=6 cycles.");
@@ -188,8 +202,20 @@ module tb_memory_compare;
         check(!(h_write || s_write || h_fetch || s_fetch), "reset has no write or fetch");
         @(negedge clk); reset=0;
         run_checked("reset_and_restart",8,14,6,7,0,0);
+
+        // ---- Akshat: run mode 6 here, e.g. prepare(6); run_checked(...); ----
+
+
+        // ---- Ajeesh: run mode 7 here. ----
+
+
+        // ---- Vaibhav: add the shared physical-address checks here. ----
+
+
+        // ---- Hardik: run the modes 9-11 sweep here. ----
+
         $fclose(summary);
-        $display("ALL TESTS PASSED (6 scenarios)");
+        $display("ALL TESTS PASSED (%0d scenarios)", scenarios);
         $finish;
     end
     initial begin #10000; $fatal(1, "global simulation timeout"); end

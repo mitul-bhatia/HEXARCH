@@ -61,7 +61,7 @@ parts += [text(45, 126, "HARVARD: independent instruction and data ports", 24, B
           text(552, 371, "read data", 18, GREEN, "middle"),
           text(45, 414, "Fetch the next instruction while the current LOAD / STORE accesses data.", 21)]
 parts += [line(45, 444, 1155, 444, "#ccd4dc", 1),
-          text(45, 489, "SHARED: one port must take turns", 24, ORANGE, weight="bold"),
+          text(45, 489, "SHARED (VON NEUMANN-STYLE): one port must take turns", 24, ORANGE, weight="bold"),
           box(45, 533, 300, 100, "Same controller", "same program and data"),
           box(440, 533, 260, 100, "Address decoder", "instruction / data region", ORANGE),
           box(795, 533, 360, 100, "Shared memory", "32 x 8 bits | one port", ORANGE),
@@ -69,7 +69,7 @@ parts += [line(45, 444, 1155, 444, "#ccd4dc", 1),
           line(700, 563, 795, 563, arrow=True),
           '<path d="M795,611 L750,611 L750,655 L195,655 L195,633" '
           f'fill="none" stroke="{INK}" stroke-width="2" marker-end="url(#arrow)"/>',
-          text(520, 647, "read data", 18, anchor="middle"),
+          text(392, 647, "read data", 18, anchor="middle"),
           text(45, 683, "Addresses 0-15: instructions. Addresses 16-31: data. LOAD / STORE pauses fetch.", 21)]
 save("architecture.svg", 1200, 720, parts)
 
@@ -77,6 +77,22 @@ with (ROOT / "results/demo_trace.csv").open() as stream:
     rows = list(csv.DictReader(stream))
 assert rows and [int(r["cycle"]) for r in rows] == list(range(1, len(rows)+1))
 h_cycles = next(int(r["cycle"]) for r in rows if r["h_halted_after"] == "1")
+overlap_cycles = [r["cycle"] for r in rows
+                  if r["h_fetch"] == "1" and (r["h_read"] == "1" or r["h_write"] == "1")]
+blocked_cycles = [r["cycle"] for r in rows if r["s_read"] == "1" or r["s_write"] == "1"]
+
+
+def executing(row, side):
+    """Mnemonic of the instruction executing in this cycle, or a dash."""
+    if row[f"{side}_valid"] != "1":
+        return "-"
+    ir = int(row[f"{side}_ir"], 16)
+    op, addr = ir >> 4, ir & 0xF
+    return {0x1: f"LOAD {addr}", 0x2: f"STORE {addr}", 0xF: "HALT", 0x0: "NOP"}.get(op, "illegal")
+
+
+def cycle_list(values):
+    return " and ".join(values) if len(values) <= 2 else ", ".join(values[:-1]) + " and " + values[-1]
 s_cycles = next(int(r["cycle"]) for r in rows if r["s_halted_after"] == "1")
 left, cell = 230, 952 / len(rows)
 parts = [text(35, 40, "Simulation waveforms: LOAD 0 / STORE 1 / HALT", 26, weight="bold"),
@@ -108,9 +124,14 @@ parts += [text(35, 622, "ACC after edge", 19)]
 for j, row in enumerate(rows):
     parts.append(text(left+j*cell+cell/2, 622, f'{row["h_acc_after"]} / {row["s_acc_after"]}',
                       17, anchor="middle"))
-parts += [text(35, 682, f"Harvard halts after cycle {h_cycles}. Shared halts after cycle {s_cycles}. ACC row: Harvard / shared.", 19),
-          text(35, 718, "Cycles 2-3: Harvard fetch overlaps data access. Shared fetch and data never overlap.", 19)]
-save("waveforms.svg", 1230, 750, parts)
+parts += [text(35, 662, "Harvard executes", 19, BLUE), text(35, 702, "Shared executes", 19, ORANGE)]
+for j, row in enumerate(rows):
+    parts += [text(left+j*cell+cell/2, 662, executing(row, "h"), 17, BLUE, "middle", "bold"),
+              text(left+j*cell+cell/2, 702, executing(row, "s"), 17, ORANGE, "middle", "bold")]
+parts += [text(35, 752, f"Harvard halts after cycle {h_cycles}. Shared halts after cycle {s_cycles}. ACC row: Harvard / shared.", 19),
+          text(35, 788, f"Cycles {cycle_list(overlap_cycles)}: Harvard fetch overlaps a data access. "
+                        f"Shared fetch is blocked in cycles {cycle_list(blocked_cycles)}.", 19)]
+save("waveforms.svg", 1230, 815, parts)
 
 # Compact versions keep labels legible inside a single IEEE report column.
 parts = [text(15, 22, "Harvard: independent ports", 19, BLUE, weight="bold"),
@@ -123,25 +144,30 @@ parts = [text(15, 22, "Harvard: independent ports", 19, BLUE, weight="bold"),
          line(170, 122, 320, 153, arrow=True),
          line(320, 178, 170, 145, arrow=True),
          text(243, 184, "data", 16, GREEN, "middle"),
-         text(15, 232, "Shared: one port, data access pauses fetch", 19, ORANGE, weight="bold"),
-         box(15, 252, 155, 65, "Controller", "same program"),
+         text(15, 232, "Von Neumann-style: one shared port", 19, ORANGE, weight="bold"),
+         text(92, 143, "+ read/write control", 13, INK, "middle"),
+         box(15, 252, 155, 65, "Controller", "same controller"),
          box(320, 252, 165, 65, "Shared", "32 x 8 bits", ORANGE),
-         line(170, 268, 320, 268, arrow=True),
-         text(245, 261, "decoder", 16, ORANGE, "middle"),
-         line(320, 298, 170, 298, arrow=True)]
+         f'<rect x="196" y="250" width="100" height="44" rx="6" fill="#ffffff" stroke="{ORANGE}" stroke-width="2"/>',
+         text(246, 268, "Address", 14, ORANGE, "middle", "bold"),
+         text(246, 285, "decoder", 14, ORANGE, "middle", "bold"),
+         line(170, 270, 196, 270, arrow=True),
+         line(296, 270, 320, 270, arrow=True),
+         line(320, 306, 170, 306, arrow=True),
+         text(245, 326, "read data", 12, INK, "middle")]
 # Override the large-diagram box text positions and fonts for these shorter boxes.
 compact = "".join(parts).replace('font-size="23"', 'font-size="18"').replace('font-size="18"', 'font-size="16"')
 # The main box helper's baselines are +39/+70; compact boxes need +27/+49.
 for y in [38, 133, 252]:
     compact = compact.replace(f'y="{y+39}"', f'y="{y+27}"').replace(f'y="{y+70}"', f'y="{y+49}"')
-save("architecture_report.svg", 500, 330, [compact])
+save("architecture_report.svg", 500, 335, [compact])
 
 parts = [text(10, 21, "Cycle", 15)]
 left, cell = 82, 392 / len(rows)
 for j in range(len(rows)):
     x = left+j*cell
     parts += [text(x+cell/2, 21, j+1, 14, anchor="middle"),
-              line(x, 30, x, 284, "#e1e7ec", 1)]
+              line(x, 30, x, 334, "#e1e7ec", 1)]
 parts += [text(10, 48, "Harvard", 16, BLUE, weight="bold"),
           text(10, 179, "Shared", 16, ORANGE, weight="bold")]
 for key, label, color, y in [("h_fetch","fetch",BLUE,63), ("h_read","read",BLUE,96),
@@ -155,5 +181,9 @@ for key, label, color, y in [("h_fetch","fetch",BLUE,63), ("h_read","read",BLUE,
         if j: coords.append(f"L {left+j*cell},{yy}")
         coords.append(f"L {left+(j+1)*cell},{yy}")
     parts.append(f'<path d="{" ".join(coords)}" fill="none" stroke="{color}" stroke-width="2"/>')
-save("waveforms_report.svg", 490, 295, parts)
+parts += [text(10, 306, "H runs", 14, BLUE), text(10, 328, "S runs", 14, ORANGE)]
+for j, row in enumerate(rows):
+    parts += [text(left+j*cell+cell/2, 306, executing(row, "h"), 11, BLUE, "middle", "bold"),
+              text(left+j*cell+cell/2, 328, executing(row, "s"), 11, ORANGE, "middle", "bold")]
+save("waveforms_report.svg", 490, 340, parts)
 print("Created block diagrams and waveform figures from simulation samples.")

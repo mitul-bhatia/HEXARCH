@@ -1,43 +1,33 @@
-# Check against the supplied project brief
+# Check against the project brief and the Phase I rubric
 
-The scope is a **small Verilog Harvard memory organization, a simple controller, and a shared single-port comparison**. The short program is `LOAD 0; STORE 1; HALT`. It copies one byte and exposes the required simultaneous access opportunity.
+## Project brief (Project 9)
 
-## Technical requirements
+| Brief item | Evidence in this repository | Status |
+| --- | --- | --- |
+| Von Neumann vs Harvard architecture | `rtl/memory_system.v`: `SHARED_BUS=0` builds the Harvard organization, `SHARED_BUS=1` a von Neumann-style single shared memory, with the same controller | Met |
+| Program Counter | `rtl/program_counter.v`; tests check advance on fetch and hold during a blocked fetch | Met |
+| Instruction Memory | `rtl/instruction_memory.v`, 16 x 8 bits, loaded from `programs/demo.hex` | Met |
+| Data Memory | `rtl/data_memory.v`, 16 x 8 bits, loaded from `programs/data.hex`; combinational read, rising-edge write | Met |
+| Address Decoder | `rtl/address_decoder.v`: in the shared memory, instructions at 0-15 and data at 16-31. In the Harvard memories each 4-bit address is used directly | Met |
+| Read/Write Control | `rtl/read_write_control.v` decodes the instruction into LOAD (read), STORE (write), HALT and illegal; `rtl/simple_controller.v` lines 25-28 gate these into the read, write and fetch enables | Met |
+| Optional Shared Lower-Level Memory | Not implemented (optional); named as a Phase II extension in the report | Optional |
+| Independent instruction and data paths | `rtl/memory_system.v`, `harvard_path` block | Met |
+| Connected to a simple processor or controller | `rtl/simple_controller.v`: PC, instruction register with valid bit, accumulator | Met |
+| Execute programs with fetches and data accesses | `make demo` (LOAD/STORE/HALT), `make test` (six scenarios), `make stress` (2000 random programs) | Met |
+| Analyze simultaneous access opportunities | Cycle-by-cycle demo table; overlap and stall counts per scenario; cycle model Harvard = N+1, shared = N+1+M, confirmed on all scenarios and 2000 random programs | Met |
+| Deliverable: Harvard memory architecture RTL | `rtl/` | Met |
+| Deliverable: block diagram | `docs/figures/architecture.png` (editable SVG beside it), report Fig. 1 | Met |
+| Deliverable: simulation waveforms | `results/demo.vcd`, `results/memory_compare.vcd`, `docs/figures/waveforms.png`, report Fig. 2 | Met |
+| Deliverable: comparison with shared memory | Same controller, program, data, 32-byte capacity and clock; demo 4 vs 6 cycles; report Table I and cycle model | Met |
+| Evaluation: separation, memory control, timing, comparison | Testbench checks every data word, unchanged instructions, exact operation counts, PC advance/hold, exclusive shared-port use and halt behaviour | Met |
 
-| Requested item | Evidence in this project |
-| --- | --- |
-| Separate instruction and data paths | `rtl/memory_system.v` instantiates independent instruction and data memories in Harvard mode |
-| Simple processor or controller | `rtl/simple_controller.v`: PC, one instruction register, one accumulator, and memory controls |
-| Program counter | `rtl/program_counter.v`; tests check advance on fetch and hold during a blocked fetch |
-| Instruction memory | `rtl/instruction_memory.v`; 16 x 8 bits, loaded from the program hex file |
-| Data memory and read/write control | `rtl/data_memory.v` and `rtl/read_write_control.v`; expected values and exact access counts checked |
-| Address decoding and organization | `rtl/address_decoder.v`; shared addresses 0-15 contain instructions and 16-31 contain data |
-| Execute programs with fetches and data accesses | `make demo` runs LOAD/STORE/HALT; `make test` exercises six scenarios |
-| Analyze simultaneous access | Harvard overlaps fetch/data in cycles 2 and 3; shared memory permits one access per cycle |
-| Harvard architecture RTL | All implementation modules in `rtl/` |
-| Block diagram | `docs/figures/architecture.png` and editable SVG |
-| Simulation waveforms | `results/demo.vcd`, sampled CSV, and `docs/figures/waveforms.png` |
-| Shared-memory comparison | Same controller, program, data, capacity, and clock period; measured demo: 4 versus 6 cycles |
-| Correct separation and control | Testbench checks all data words, unchanged instructions, exactly-once operations, and exclusive shared-port use |
-| Timing behavior | Combinational reads, rising-edge writes, synchronous reset, PC hold, halt, and store-to-load checks |
-| Optional shared lower-level memory | Omitted; explicitly optional in the supplied brief |
+## Phase I rubric (30%)
 
-The one-register fetch/execute overlap demonstrates concurrent access. Caches, a full instruction set, a frontend, and board deployment are outside this implementation's scope.
+| Requirement | Marks | Evidence | Status |
+| --- | ---: | --- | --- |
+| IEEE report with abstract, literature review, proposed solution, individual contributions, references | 10 | [`output/pdf/HEXARCH_Phase_I_Report.pdf`](../output/pdf/HEXARCH_Phase_I_Report.pdf), IEEEtran source in `docs/report/` | Ready; rebuild after the member pull requests are merged |
+| Video at most 5 minutes: idea, all five names, working prototype | 15 | [Recording guide](VIDEO_SCRIPT.md) and title card | **To do:** record and upload |
+| GitHub: report, video link, prototype files, artefacts | 5 | This repository; [`VIDEO.md`](../VIDEO.md) holds the video link | **To do:** add the video link |
+| GitHub: every member's meaningful contribution in the commit history | (part of the 5) | [Starter tasks](MEMBER_TASKS.md) | **To do:** each member's own pull request |
 
-## Phase I: 30%
-
-| Requirement | Marks | Status |
-| --- | ---: | --- |
-| IEEE report: abstract, literature review, proposed solution, individual contributions, references | 10 | Draft PDF and LaTeX supplied; contribution section is clearly marked proposed |
-| Video, maximum 5 minutes: idea, all five names, working/progress | 15 | A 3:30 script covers all items; recording and accessible link remain |
-| GitHub: report, video link, source, artifacts, meaningful individual history | 5 | Private [HEXARCH repository](https://github.com/mitul-bhatia/HEXARCH) created; member contributions, video link, and evaluator access remain |
-
-**Phase I is not fully ready to submit until the team completes those remaining items.** The deadline provided is **November 16, 2026, 11:59 PM IST**. The team confirmed **Section A** on November 8.
-
-## Phase II: 70%
-
-The report contains preliminary results/discussion and a conclusion. Continue developing the same repository, replace proposed contributions with actual work, and prepare each member to explain the implementation and their commits. Interview slots were not specified in the supplied notice.
-
-## This simplification pass: November 8, 2026
-
-The main demo was reduced from a seven-instruction copy chain to one LOAD, one STORE, and HALT. Its new measured counts are 4 and 6; the earlier 8 and 14 counts described the longer program, which is retained only for the reset verification scenario. `make demo` now prints a six-cycle table and creates a short VCD. All six verification scenarios still pass.
+Deadline: **16 November 2026, 11:59 PM IST**. The plan and checklist are in [`TEAM_AND_PLAN.md`](TEAM_AND_PLAN.md).

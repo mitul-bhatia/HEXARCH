@@ -1,0 +1,2 @@
+STRESS PASSED: 2000 random programs; both designs match the software model; Harvard = N+1 and shared = N+1+M cycles in every program.
+tb/tb_random_stress.v:94: $finish called at 312696000 (1ps)
