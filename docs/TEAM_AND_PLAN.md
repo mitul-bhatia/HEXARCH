@@ -20,8 +20,8 @@ Every member should be able to explain the whole project, not only their own par
 
 | Date (IST) | Goal |
 | --- | --- |
-| 14 Nov | Mitul invites the four members to the repository. Everyone runs `make demo` and `make test` on their own machine. |
-| 14-15 Nov | Each member finishes their starter task and opens a pull request from their own GitHub account. Someone else reviews it; Mitul merges and regenerates `results/`. |
+| 14-15 Nov | Each member opens the [Team hub](https://mitul-bhatia.github.io/HEXARCH/team.html), clicks their name, forks the repository and runs `make demo` and `make test` on their own machine (no invitation needed). |
+| 15 Nov | Each member finishes their starter task and opens a pull request from their own GitHub account. The automatic check must be green; someone else reviews it; Mitul merges with a merge commit and regenerates `results/`. Every merge to `main` republishes the website. |
 | 15 Nov | Record the video ([recording guide](VIDEO_SCRIPT.md)), upload it, put the link in [`VIDEO.md`](../VIDEO.md). |
 | 15 Nov | Final report check, `make report`, commit the PDF. |
 | 16 Nov | Check everything from a logged-out browser, then submit the form, well before 11:59 PM IST. |
@@ -36,7 +36,7 @@ Every member should be able to explain the whole project, not only their own par
 
 - [x] Section confirmed: A.
 - [x] Repository: https://github.com/mitul-bhatia/HEXARCH (public, so evaluators can open it).
-- [ ] All four members invited as collaborators and have accepted.
+- [ ] All four members have forked the repository and run `make demo` and `make test` (Team hub, step 1-4).
 - [ ] Each member's starter-task pull request merged from their own account.
 - [ ] Video recorded, at most 5:00, uploaded with link access for anyone; link and duration in `VIDEO.md`.
 - [ ] After the merges: scenario count and report Tables I and II updated, then `make report guide`.

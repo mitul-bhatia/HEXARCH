@@ -7,6 +7,7 @@
 | **Report** | [IEEE-format Phase I report (PDF)](output/pdf/HEXARCH_Phase_I_Report.pdf) |
 | **Video** | [VIDEO.md](VIDEO.md) (link added after recording) |
 | **New here?** | [Illustrated study guide](https://mitul-bhatia.github.io/HEXARCH/) ([PDF](output/pdf/HEXARCH_Study_Guide.pdf)) |
+| **Team members** | [Team hub](https://mitul-bhatia.github.io/HEXARCH/team.html): your setup and task, and the clickable video script |
 
 We demonstrate one idea: **separate instruction and data paths (Harvard) let an instruction fetch and a data access happen in the same cycle, while a von Neumann-style shared single-port memory must take turns.**
 
