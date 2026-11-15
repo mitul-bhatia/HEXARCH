@@ -9,6 +9,7 @@ The website has two pages:
 plus the figures, the video cards and both PDFs. GitHub Actions runs this on
 every push to main (.github/workflows/pages.yml), so merging updates the site.
 """
+import hashlib
 import re
 import shutil
 import sys
@@ -76,8 +77,14 @@ if site.exists():
 site.mkdir(parents=True)
 (site / ".nojekyll").write_text("")
 (site / "index.html").write_text(html)
+hub_data = web_paths((repo / "docs/site/hub-data.js").read_text())
+# Browsers cache files from GitHub Pages for up to 10 minutes. A version tag
+# that changes with the content makes every update load immediately.
+version = hashlib.sha256(hub_data.encode()).hexdigest()[:10]
+assert team.count('src="hub-data.js"') == 1
+team = team.replace('src="hub-data.js"', f'src="hub-data.js?v={version}"')
 (site / "team.html").write_text(team)
-(site / "hub-data.js").write_text(web_paths((repo / "docs/site/hub-data.js").read_text()))
+(site / "hub-data.js").write_text(hub_data)
 (site / "figures").mkdir()
 for name in ["architecture.png", "waveforms.png"]:
     shutil.copy(repo / "docs/figures" / name, site / "figures" / name)
