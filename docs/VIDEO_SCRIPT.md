@@ -2,6 +2,8 @@
 
 This is the only video script. Read it once from top to bottom before recording day.
 
+**Clickable version:** the [Team hub → Video script](https://mitul-bhatia.github.io/HEXARCH/team.html#video) shows the same words scene by scene: click a scene to see what to show, what to say and when to switch windows, and use **Prompter** for large text and a timer while recording. `python3 scripts/check_site.py` keeps the two identical.
+
 **The video must:** stay at or under **5:00** · state the project idea · introduce all **five** members by full name · show the working prototype (Verilog, block diagram, simulation).
 **This plan:** 7 scenes, about **3:40 of speech** and about **4:40 with screen actions**, leaving about 20 seconds spare.
 

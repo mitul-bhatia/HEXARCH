@@ -1,0 +1,25 @@
+# Runs the simulations on every pull request and on main.
+# A green tick on a pull request means `make check` passed.
+name: Simulation tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Icarus Verilog
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+      - run: iverilog -V | head -1
+      - name: make check (demo, test scenarios, 2000 random programs)
+        run: make check
+      - name: Team hub matches docs/VIDEO_SCRIPT.md
+        run: python3 scripts/check_site.py

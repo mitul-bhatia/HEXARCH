@@ -7,7 +7,7 @@ RTL := $(wildcard rtl/*.v)
 
 # Simulation output is written to build/ first. It is copied into results/
 # only after the run passes, so a failing run never overwrites the evidence.
-.PHONY: demo test stress check figures report guide clean
+.PHONY: demo test stress check figures report guide site clean
 
 build/memory_compare.vvp: $(RTL) tb/tb_memory_compare.v
 	mkdir -p build
@@ -57,5 +57,10 @@ guide:
 	mkdir -p output/pdf
 	"$(CHROME)" --headless=new --disable-gpu --no-pdf-header-footer --print-to-pdf=output/pdf/HEXARCH_Study_Guide.pdf "file://$(CURDIR)/docs/study_guide/study_guide.html"
 
+# The website (study guide + Team hub). GitHub Actions publishes it on every push to main.
+site:
+	$(PYTHON) scripts/check_site.py
+	$(PYTHON) scripts/build_site.py _site
+
 clean:
-	rm -rf build
+	rm -rf build _site
