@@ -9,6 +9,7 @@ The website has two pages:
 plus the figures, the video cards and both PDFs. GitHub Actions runs this on
 every push to main (.github/workflows/pages.yml), so merging updates the site.
 """
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -30,13 +31,16 @@ nav = ('<nav class="topbar" aria-label="Site"><b>HEXARCH &middot; Project 9</b>'
        '<a href="HEXARCH_Phase_I_Report.pdf">Report (PDF)</a>'
        '<a href="https://github.com/mitul-bhatia/HEXARCH">GitHub</a></nav>\n')
 
+# The same small icon as team.html, so the browser does not request /favicon.ico.
+favicon = re.search(r'<link rel="icon"[^>]*>', (repo / "docs/site/team.html").read_text()).group(0)
+
 # ---- Study guide -> index.html ----
 html = web_paths((repo / "docs/study_guide/study_guide.html").read_text())
 html = html.replace(
     '<meta charset="utf-8">',
     '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
     '<meta name="description" content="Illustrated study guide for Project 9: Instruction and Data '
-    'Memory Hierarchy (Harvard vs von Neumann-style memory).">', 1)
+    'Memory Hierarchy (Harvard vs von Neumann-style memory).">\n' + favicon, 1)
 web_css = '''
   @media screen {
     body { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; background: #fff; }
@@ -73,7 +77,7 @@ site.mkdir(parents=True)
 (site / ".nojekyll").write_text("")
 (site / "index.html").write_text(html)
 (site / "team.html").write_text(team)
-shutil.copy(repo / "docs/site/hub-data.js", site / "hub-data.js")
+(site / "hub-data.js").write_text(web_paths((repo / "docs/site/hub-data.js").read_text()))
 (site / "figures").mkdir()
 for name in ["architecture.png", "waveforms.png"]:
     shutil.copy(repo / "docs/figures" / name, site / "figures" / name)
@@ -82,4 +86,9 @@ for name in ["title_card.png", "end_card.png"]:
     shutil.copy(repo / "docs/video" / name, site / "video" / name)
 for name in ["HEXARCH_Study_Guide.pdf", "HEXARCH_Phase_I_Report.pdf"]:
     shutil.copy(repo / "output/pdf" / name, site / name)
+# Every image the pages or the hub data point at must exist in the site.
+for page in ["index.html", "team.html", "hub-data.js"]:
+    for ref in re.findall(r'(?:src="|"(?:image|endImage)": ")([^"]+\.png)', (site / page).read_text()):
+        if not (site / ref).is_file():
+            sys.exit(f"{page} refers to {ref}, which is not in the site")
 print("site built in", site, ":", sorted(p.name for p in site.iterdir()))
