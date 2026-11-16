@@ -326,7 +326,7 @@ window.HUB = {
     },
     {
      "title": "Add the link and submit",
-     "text": "Put the video link and duration in `VIDEO.md`, merge, check everything from a logged-out browser, then submit the [evaluation form](https://docs.google.com/forms/d/e/1FAIpQLSc6Cx8OrOQLGj_X2ZMkyG5jc8mokq36mGRq2x8jGRNV1sbegA/viewform) before **16 November, 11:59 PM IST**."
+     "text": "Run `python3 scripts/set_video_link.py \"LINK\" 4:35` to put the link into `VIDEO.md` and the README, merge, check everything from a logged-out browser, then submit the [evaluation form](https://docs.google.com/forms/d/e/1FAIpQLSc6Cx8OrOQLGj_X2ZMkyG5jc8mokq36mGRq2x8jGRNV1sbegA/viewform) before **16 November, 11:59 PM IST**."
     }
    ],
    "explain": [
@@ -624,7 +624,7 @@ window.HUB = {
    "Watch it once: **at most 5:00**, all five names heard, code readable. Trim pauses with QuickTime *Edit → Trim* if needed.",
    "Upload to **YouTube as Unlisted** (not Private), or to **Google Drive** with *Share → Anyone with the link → Viewer*.",
    "Open the link in a private window while logged out. It must play.",
-   "Put the link and exact duration in `VIDEO.md`, commit, and merge to `main`.",
+   "Run `python3 scripts/set_video_link.py \"LINK\" 4:35` (it fills in `VIDEO.md` and the README badge), commit on a branch, and merge to `main`.",
    "Submit the repository link in the form."
   ]
  }

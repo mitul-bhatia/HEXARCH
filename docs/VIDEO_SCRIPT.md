@@ -132,5 +132,5 @@ Then say **one** of these, whichever is true on recording day:
 1. Watch the whole video once. Check that it is **at most 5:00**, all five names are heard and the code is readable. If it is too long, trim pauses at the start and end (QuickTime: *Edit → Trim*).
 2. Upload it either to **YouTube as Unlisted** (not Private) or to **Google Drive**, with *Share → General access → Anyone with the link → Viewer*.
 3. Open the link in a private/incognito window while logged out. It must play.
-4. Put the link and the exact duration in [`VIDEO.md`](../VIDEO.md), commit and push.
+4. Run `python3 scripts/set_video_link.py "LINK" 4:35` with the real link and exact duration. It fills in [`VIDEO.md`](../VIDEO.md) and the README badge. Commit on a branch, open a pull request and merge it.
 5. Submit the repository link in the form (see [`TEAM_AND_PLAN.md`](TEAM_AND_PLAN.md)).

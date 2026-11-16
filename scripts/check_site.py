@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that the Team hub page says exactly what docs/VIDEO_SCRIPT.md says.
+"""Check the Team hub against docs/VIDEO_SCRIPT.md, and every markdown link.
 
 The words on the website (docs/site/hub-data.js) and the written video guide
 must not drift apart. Every spoken line, every cue word and every scene time on
@@ -53,10 +53,20 @@ for a, b in zip(data["scenes"], data["scenes"][1:]):
 if data["scenes"][-1]["end"] > 300:
     problems.append("the plan is longer than 5:00")
 
+# Every relative link in the markdown files must point to an existing file.
+link = re.compile(r"\]\(([^)\s]+)\)|href=\"([^\"]+)\"")
+for md_file in [root / "README.md", root / "VIDEO.md", *sorted((root / "docs").glob("*.md"))]:
+    for found in link.finditer(md_file.read_text()):
+        target = (found[1] or found[2]).split("#")[0]
+        if not target or re.match(r"[a-z]+:", target):
+            continue
+        if not (md_file.parent / target).exists():
+            problems.append(f"{md_file.relative_to(root)}: broken link to {target}")
+
 if problems:
-    print("Team hub and docs/VIDEO_SCRIPT.md disagree:")
+    print("Problems found:")
     for p in problems:
         print("  -", p)
     sys.exit(1)
 print(f"Team hub matches docs/VIDEO_SCRIPT.md: {len(data['scenes'])} scenes, "
-      f"{len(data['members'])} members, ends at {clock(data['scenes'][-1]['end'])}.")
+      f"{len(data['members'])} members, ends at {clock(data['scenes'][-1]['end'])}; all markdown links resolve.")

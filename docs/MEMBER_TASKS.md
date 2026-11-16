@@ -50,5 +50,5 @@ All six scenarios and 2000 random programs (`make stress`) follow it. **Predict 
 *Be ready to explain:* what the waveform shows during the two blocked shared fetches.
 
 ### Mitul
-**Integration.** Merge the four pull requests with **Create a merge commit** (it keeps each member as the author of their commits), then run `make check figures`. Update the places that say "six scenarios" (`grep -rn "six" README.md docs/`), add the new scenarios as rows of report Table I, and add one short clause per member to report Table II naming their merged work. Run `make report guide` and commit `results/`, figures and both PDFs. Record and upload the video, add the link to `VIDEO.md`, and submit the form.
+**Integration.** Merge the four pull requests with **Create a merge commit** (it keeps each member as the author of their commits), then run `make check figures`. Update the places that say "six scenarios" (`grep -rn "six" README.md docs/`), add the new scenarios as rows of report Table I, and add one short clause per member to report Table II naming their merged work. Run `make report guide` and commit `results/`, figures and both PDFs. Record and upload the video, run `python3 scripts/set_video_link.py "LINK" DURATION`, merge, and submit the form.
 *Be ready to explain:* how `memory_system.v` connects the same controller to both organizations.

@@ -21,9 +21,9 @@ Every member should be able to explain the whole project, not only their own par
 | Date (IST) | Goal |
 | --- | --- |
 | 14-15 Nov | Each member opens the [Team hub](https://mitul-bhatia.github.io/HEXARCH/team.html), clicks their name, forks the repository and runs `make demo` and `make test` on their own machine (no invitation needed). |
-| 15 Nov | Each member finishes their starter task and opens a pull request from their own GitHub account. The automatic check must be green; someone else reviews it; Mitul merges with a merge commit and regenerates `results/`. Every merge to `main` republishes the website. |
-| 15 Nov | Record the video ([recording guide](VIDEO_SCRIPT.md)), upload it, put the link in [`VIDEO.md`](../VIDEO.md). |
-| 15 Nov | Final report check, `make report`, commit the PDF. |
+| 15-16 Nov | Each member finishes their starter task and opens a pull request from their own GitHub account. The automatic check must be green; someone else reviews it; Mitul merges with a merge commit and regenerates `results/`. Every merge to `main` republishes the website. |
+| 16 Nov | Record the video ([recording guide](VIDEO_SCRIPT.md)), upload it, put the link in [`VIDEO.md`](../VIDEO.md). |
+| 16 Nov | Final report check, `make report`, commit the PDF. |
 | 16 Nov | Check everything from a logged-out browser, then submit the form, well before 11:59 PM IST. |
 
 ## Phase I checklist
