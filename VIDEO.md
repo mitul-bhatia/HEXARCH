@@ -1,8 +1,8 @@
 # 🎬 Prototype demonstration video
 
-<!-- VIDEO-LINK -->**Video link:** _not recorded yet_<!-- /VIDEO-LINK -->
+<!-- VIDEO-LINK -->**Video link:** [https://drive.google.com/drive/u/3/folders/123BU1rMP_2GykoxWujJY8ZeaxLcJ-jWZ](https://drive.google.com/drive/u/3/folders/123BU1rMP_2GykoxWujJY8ZeaxLcJ-jWZ) (Google Drive)<!-- /VIDEO-LINK -->
 
-<!-- VIDEO-DURATION -->**Duration:** _-_<!-- /VIDEO-DURATION -->
+<!-- VIDEO-DURATION -->**Duration:** 4:53 (limit 5:00)<!-- /VIDEO-DURATION -->
 
 **What it shows (≤ 5 minutes):** the project idea, all five members by name (Akshat Chauhan, Ajeesh Amreet, Vaibhav, Hardik Maheshwari, Mitul Bhatia), and the working prototype: the Verilog modules, the block diagram, `make demo`, the waveforms and `make test`.
 

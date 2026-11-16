@@ -7,7 +7,7 @@
 **Project 9 · MCA Projects 2026 · Section A · Team HEXARCH**
 
 <a href="output/pdf/HEXARCH_Phase_I_Report.pdf"><img alt="IEEE report (PDF)" src="https://img.shields.io/badge/IEEE_report-PDF-145f9b?style=for-the-badge&logo=adobeacrobatreader&logoColor=white"></a>
-<!-- VIDEO-BADGE --><a href="VIDEO.md"><img alt="Prototype video: link coming soon" src="https://img.shields.io/badge/Prototype_video-coming_soon-a54c13?style=for-the-badge&logo=youtube&logoColor=white"></a><!-- /VIDEO-BADGE -->
+<!-- VIDEO-BADGE --><a href="https://drive.google.com/drive/u/3/folders/123BU1rMP_2GykoxWujJY8ZeaxLcJ-jWZ"><img alt="Watch the prototype video (4:53)" src="https://img.shields.io/badge/Prototype_video-watch_4%3A53-a54c13?style=for-the-badge&logo=youtube&logoColor=white"></a><!-- /VIDEO-BADGE -->
 <a href="https://mitul-bhatia.github.io/HEXARCH/"><img alt="Study guide" src="https://img.shields.io/badge/Study_guide-website-17745c?style=for-the-badge&logo=readthedocs&logoColor=white"></a>
 <a href="https://mitul-bhatia.github.io/HEXARCH/team.html"><img alt="Team hub" src="https://img.shields.io/badge/Team_hub-tasks_%26_script-172638?style=for-the-badge&logo=github&logoColor=white"></a>
 
@@ -24,7 +24,7 @@
 | | Deliverable | Where | Status |
 | :---: | --- | --- | :---: |
 | 📄 | **IEEE-format report**: abstract, literature review, proposed solution, individual contributions, references | [`HEXARCH_Phase_I_Report.pdf`](output/pdf/HEXARCH_Phase_I_Report.pdf) · [LaTeX source](docs/report/phase1_report.tex) | ✅ |
-| 🎬 | **Prototype video** (≤ 5 min): idea, all five members, working prototype | <!-- VIDEO-ROW -->[`VIDEO.md`](VIDEO.md): link added after recording<!-- /VIDEO-ROW --> | <!-- VIDEO-STATUS -->⏳<!-- /VIDEO-STATUS --> |
+| 🎬 | **Prototype video** (≤ 5 min): idea, all five members, working prototype | <!-- VIDEO-ROW -->[Watch on Google Drive](https://drive.google.com/drive/u/3/folders/123BU1rMP_2GykoxWujJY8ZeaxLcJ-jWZ) (4:53) · [`VIDEO.md`](VIDEO.md)<!-- /VIDEO-ROW --> | <!-- VIDEO-STATUS -->✅<!-- /VIDEO-STATUS --> |
 | 🧩 | **Prototype files**: Verilog RTL and testbenches | [`rtl/`](rtl/) · [`tb/`](tb/) · [`programs/`](programs/) | ✅ |
 | 📊 | **Artefacts**: block diagram, waveforms, simulation results | [`docs/figures/`](docs/figures/) · [`results/`](results/) | ✅ |
 | 🧪 | **Verification**: 6 scenarios + 2000 random programs, run on every change | [Simulation tests](https://github.com/mitul-bhatia/HEXARCH/actions/workflows/tests.yml) | ✅ |
