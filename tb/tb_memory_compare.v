@@ -79,6 +79,21 @@ module tb_memory_compare;
 
 
                 // ---- Modes 9-11 (Hardik): add the memory-instruction sweep cases here. ----
+                9: begin
+                    image[0] = 8'h10; image[1] = 8'h00;
+                    seed[0] = 8'h09;
+                    expected[0] = 8'h09;
+                end
+                10: begin
+                    image[0] = 8'h10; image[1] = 8'h21; image[2] = 8'h11;
+                    seed[0] = 8'h09;
+                    expected[0] = 8'h09; expected[1] = 8'h09;
+                end
+                11: begin
+                    image[0] = 8'h10; image[1] = 8'h21; image[2] = 8'h22; image[3] = 8'h23; image[4] = 8'h13;
+                    seed[0] = 8'h09;
+                    for (i = 0; i < 4; i = i + 1) expected[i] = 8'h09;
+                end
             endcase
             // Load identical images into both architectures while held in reset.
             for (i = 0; i < 16; i = i + 1) begin
@@ -180,6 +195,7 @@ module tb_memory_compare;
         else $dumpfile("build/memory_compare.vcd");
         $dumpvars(0, tb_memory_compare);
         // ---- Hardik: extra $dumpvars lines go here (they must run at time 0). ----
+        $dumpvars(0, h.harvard_path.dmem.words[1], s.shared_path.mem.words[17]);
 
         if (demo_only) summary=$fopen("build/demo_summary.csv", "w");
         else summary=$fopen("build/summary.csv", "w");
@@ -221,6 +237,9 @@ module tb_memory_compare;
 
 
         // ---- Hardik: run the modes 9-11 sweep here. ----
+        prepare(9);  run_checked("one_memory_op", 4, 5, 1, 8'h09, 0, 0);
+        prepare(10); run_checked("three_memory_ops", 5, 8, 3, 8'h09, 0, 0);
+        prepare(11); run_checked("five_memory_ops", 7, 12, 5, 8'h09, 0, 0);
 
         $fclose(summary);
         $display("ALL TESTS PASSED (%0d scenarios)", scenarios);
