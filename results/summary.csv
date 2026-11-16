@@ -5,3 +5,8 @@ no_data_access,4,4,0,0,0,0
 halt_only,2,2,0,0,0,0
 illegal_opcode,2,2,0,0,0,1
 reset_and_restart,8,14,6,6,7,0
+full_program,17,17,0,0,0,0
+data_copy_chain,6,10,4,4,60,0
+one_memory_op,4,5,1,1,9,0
+three_memory_ops,5,8,3,3,9,0
+five_memory_ops,7,12,5,5,9,0

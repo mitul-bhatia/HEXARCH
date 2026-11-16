@@ -27,7 +27,7 @@
 | 🎬 | **Prototype video** (≤ 5 min): idea, all five members, working prototype | <!-- VIDEO-ROW -->[Watch on Google Drive](https://drive.google.com/drive/u/3/folders/123BU1rMP_2GykoxWujJY8ZeaxLcJ-jWZ) (4:53) · [`VIDEO.md`](VIDEO.md)<!-- /VIDEO-ROW --> | <!-- VIDEO-STATUS -->✅<!-- /VIDEO-STATUS --> |
 | 🧩 | **Prototype files**: Verilog RTL and testbenches | [`rtl/`](rtl/) · [`tb/`](tb/) · [`programs/`](programs/) | ✅ |
 | 📊 | **Artefacts**: block diagram, waveforms, simulation results | [`docs/figures/`](docs/figures/) · [`results/`](results/) | ✅ |
-| 🧪 | **Verification**: 6 scenarios + 2000 random programs, run on every change | [Simulation tests](https://github.com/mitul-bhatia/HEXARCH/actions/workflows/tests.yml) | ✅ |
+| 🧪 | **Verification**: 11 scenarios + 2000 random programs, run on every change | [Simulation tests](https://github.com/mitul-bhatia/HEXARCH/actions/workflows/tests.yml) | ✅ |
 | 📚 | **Explanations**: illustrated study guide, brief and rubric check | [Website](https://mitul-bhatia.github.io/HEXARCH/) · [PDF](output/pdf/HEXARCH_Study_Guide.pdf) · [requirements check](docs/REQUIREMENTS.md) | ✅ |
 
 ## 🧠 The two designs
@@ -80,12 +80,12 @@ HALT       Stop
 ## ✅ Verify
 
 ```sh
-make test     # 6 self-checking scenarios
+make test     # 11 self-checking scenarios
 make stress   # 2000 random programs against a software model
 make check    # all of the above
 ```
 
-The scenarios are the demo, address boundaries, no data access, HALT only, an invalid opcode, and a mid-program reset. Every run checks all final data words, that instructions are never overwritten, that the PC holds during a blocked fetch, and that the shared port has one user per cycle. Results are written to `build/` and copied to [`results/`](results/) only when the run passes. The same checks run on GitHub for every pull request.
+The 11 scenarios include the demo, address boundaries, no data access, HALT only, an invalid opcode, mid-program reset, a full 16-byte program, a data copy-chain, and an $M = 1, 3, 5$ memory operation sweep. Every run checks all final data words, that instructions are never overwritten, that the PC holds during a blocked fetch, and that the shared port has one user per cycle. Results are written to `build/` and copied to [`results/`](results/) only when the run passes. The same checks run on GitHub for every pull request.
 
 <details>
 <summary><b>Result files</b></summary>

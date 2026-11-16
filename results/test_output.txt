@@ -1,9 +1,16 @@
 VCD info: dumpfile build/memory_compare.vcd opened for output.
+VCD warning: array word tb_memory_compare.h.harvard_path.dmem.words[1] will conflict with an escaped identifier.
+VCD warning: array word tb_memory_compare.s.shared_path.mem.words[17] will conflict with an escaped identifier.
 PASS demo               Harvard=4 shared=6 overlap=2 stalls=2 ACC=7
 PASS address_boundaries Harvard=6 shared=10 overlap=4 stalls=4 ACC=165
 PASS no_data_access     Harvard=4 shared=4 overlap=0 stalls=0 ACC=0
 PASS halt_only          Harvard=2 shared=2 overlap=0 stalls=0 ACC=0
 PASS illegal_opcode     Harvard=2 shared=2 overlap=0 stalls=0 ACC=0
 PASS reset_and_restart  Harvard=8 shared=14 overlap=6 stalls=6 ACC=7
-ALL TESTS PASSED (6 scenarios)
-tb/tb_memory_compare.v:219: $finish called at 616000 (1ps)
+PASS full_program       Harvard=17 shared=17 overlap=0 stalls=0 ACC=0
+PASS data_copy_chain    Harvard=6 shared=10 overlap=4 stalls=4 ACC=60
+PASS one_memory_op      Harvard=4 shared=5 overlap=1 stalls=1 ACC=9
+PASS three_memory_ops   Harvard=5 shared=8 overlap=3 stalls=3 ACC=9
+PASS five_memory_ops    Harvard=7 shared=12 overlap=5 stalls=5 ACC=9
+ALL TESTS PASSED (11 scenarios)
+tb/tb_memory_compare.v:246: $finish called at 1286000 (1ps)

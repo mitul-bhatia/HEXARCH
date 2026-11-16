@@ -217,6 +217,24 @@ $var integer 32 ;" expected_sc [31:0] $end
 $var integer 32 <" memory_ops [31:0] $end
 $upscope $end
 $upscope $end
+$scope module tb_memory_compare $end
+$scope module h $end
+$scope begin harvard_path $end
+$scope module dmem $end
+$var reg 8 =" \words[1] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module tb_memory_compare $end
+$scope module s $end
+$scope begin shared_path $end
+$scope module mem $end
+$var reg 8 >" \words[17] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
 $enddefinitions $end
 $comment Show the parameter values. $end
 $dumpall
@@ -235,6 +253,8 @@ b1110000011100100110111101100111011100100110000101101101011100110010111101100100
 $end
 #0
 $dumpvars
+b0 >"
+b0 ="
 bx <"
 bx ;"
 bx :"
@@ -403,6 +423,8 @@ b0 1"
 16
 #10000
 15
+b0 >"
+b0 ="
 b10000 E
 06
 #15000
@@ -599,6 +621,7 @@ b1 y
 b1 /"
 0*"
 1("
+b111 ="
 b11 .
 b11 N
 b11 [
@@ -649,6 +672,7 @@ b10 }
 0`
 0_
 0"
+b111 >"
 0,
 10
 b1 L

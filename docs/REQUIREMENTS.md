@@ -13,7 +13,7 @@
 | Optional Shared Lower-Level Memory | Not implemented (optional); named as a Phase II extension in the report | Optional |
 | Independent instruction and data paths | `rtl/memory_system.v`, `harvard_path` block | Met |
 | Connected to a simple processor or controller | `rtl/simple_controller.v`: PC, instruction register with valid bit, accumulator | Met |
-| Execute programs with fetches and data accesses | `make demo` (LOAD/STORE/HALT), `make test` (six scenarios), `make stress` (2000 random programs) | Met |
+| Execute programs with fetches and data accesses | `make demo` (LOAD/STORE/HALT), `make test` (11 scenarios), `make stress` (2000 random programs) | Met |
 | Analyze simultaneous access opportunities | Cycle-by-cycle demo table; overlap and stall counts per scenario; cycle model Harvard = N+1, shared = N+1+M, confirmed on all scenarios and 2000 random programs | Met |
 | Deliverable: Harvard memory architecture RTL | `rtl/` | Met |
 | Deliverable: block diagram | `docs/figures/architecture.png` (editable SVG beside it), report Fig. 1 | Met |
@@ -25,9 +25,9 @@
 
 | Requirement | Marks | Evidence | Status |
 | --- | ---: | --- | --- |
-| IEEE report with abstract, literature review, proposed solution, individual contributions, references | 10 | [`output/pdf/HEXARCH_Phase_I_Report.pdf`](../output/pdf/HEXARCH_Phase_I_Report.pdf), IEEEtran source in `docs/report/` | Ready; rebuild after the member pull requests are merged |
-| Video at most 5 minutes: idea, all five names, working prototype | 15 | [Recording guide](VIDEO_SCRIPT.md) and title card | **To do:** record and upload |
-| GitHub: report, video link, prototype files, artefacts | 5 | This repository; [`VIDEO.md`](../VIDEO.md) holds the video link | **To do:** add the video link |
-| GitHub: every member's meaningful contribution in the commit history | (part of the 5) | [Starter tasks](MEMBER_TASKS.md) | **To do:** each member's own pull request |
+| IEEE report with abstract, literature review, proposed solution, individual contributions, references | 10 | [`output/pdf/HEXARCH_Phase_I_Report.pdf`](../output/pdf/HEXARCH_Phase_I_Report.pdf), IEEEtran source in `docs/report/` | Met |
+| Video at most 5 minutes: idea, all five names, working prototype | 15 | [`output/HEXARCH_demo_final.mp4`](../output/HEXARCH_demo_final.mp4), Google Drive upload (4:53) | Met |
+| GitHub: report, video link, prototype files, artefacts | 5 | This repository; [`VIDEO.md`](../VIDEO.md) holds the video link | Met |
+| GitHub: every member's meaningful contribution in the commit history | (part of the 5) | Member PRs (#6, #7, #8, #9) merged in commit history | Met |
 
 Deadline: **16 November 2026, 11:59 PM IST**. The plan and checklist are in [`TEAM_AND_PLAN.md`](TEAM_AND_PLAN.md).
