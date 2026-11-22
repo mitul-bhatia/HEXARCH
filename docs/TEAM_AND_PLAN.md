@@ -45,3 +45,7 @@ Every member should be able to explain the whole project, not only their own par
 ## Phase II (70%)
 
 Keep developing the same repository with the same individual history. Each member should be ready to explain the design and their own commits in the interview; the [study guide](https://mitul-bhatia.github.io/HEXARCH/) has likely questions. Phase II built: the shared lower-level memory with split caches, see [PHASE2.md](PHASE2.md) (per-member tasks included). Still possible: a synchronous-read memory model and synthesis results.
+
+### Phase II evaluation (confirmed by the CSAI Lead Office)
+
+**24 November 2026, 3:25 PM to 3:40 PM, room A408.** 15 minutes, strictly on time, no rescheduling, **all five members present**, lab attendance in the same room. Preparation (the 15-minute plan, question banks, live-change drills, cheat sheet): study guide sections 17-21, [live site](https://mitul-bhatia.github.io/HEXARCH/).

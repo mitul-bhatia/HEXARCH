@@ -93,6 +93,11 @@
     <li><b>Phase II:</b> the files, the tests and the results</li>
     <li><b>Phase II:</b> status, what is left, and honest risks</li>
     <li><b>Phase II:</b> interview preparation</li>
+    <li><b>Interview day:</b> 24 Nov, the 15-minute plan, who says what</li>
+    <li><b>Question bank A:</b> Verilog and digital design</li>
+    <li><b>Question bank B:</b> computer architecture, caches, our design</li>
+    <li><b>Question bank C:</b> testing, tools, GitHub, report, AI, "change the code live"</li>
+    <li><b>One-page cheat sheet</b></li>
   </ol>
   <p class="small" style="margin-top:30px">Team: Akshat Chauhan, Ajeesh Amreet, Vaibhav, Hardik Maheshwari, Mitul Bhatia. Phase I (submitted) deadline was 16 November 2026. Phase II = final report, GitHub history and interview (70%).<br>Every number in this guide comes from a real simulation run (Icarus Verilog 13.0).</p>
 </section>
@@ -728,6 +733,179 @@ make report2     # rebuilds the final report PDF</pre>
   </ul>
   <div class="callout g"><b>Tip.</b> Start answers with the simple idea, then the cycle count. If you do not know, say what you do know and how you would find out. Be honest about AI help: you reviewed, ran and can explain it.</div>
   <div class="callout b"><b>Your five-minute checklist before the interview:</b> run <code>make check</code>; open the Team hub; look at <code>results/demo_output.txt</code> and <code>results/hierarchy_output.txt</code>; reread sections 5, 13 and 13b.</div>
+</section>
+
+<!-- ============ 17 INTERVIEW DAY ============ -->
+<section class="page" id="interview">
+  <h2>17. Interview day: 24 November 2026, 3:25-3:40 PM, room A408</h2>
+  <div class="callout o"><b>Facts from the official schedule.</b> Team HEXARCH, Section A. Slot is <b>15 minutes</b>, strictly on time, no rescheduling. <b>All five members must be present in A408.</b> Lab attendance is taken in the same room. Arrive by 3:10 PM.</div>
+
+  <h3>Bring and prepare (do it the evening before)</h3>
+  <ul class="plain">
+    <li>&#9744; Laptop charged, repository cloned, <code>iverilog</code> works. Run <code>make check</code> once; it prints three PASSED lines and the hierarchy table.</li>
+    <li>&#9744; Open in tabs, before you walk in: the GitHub repo, <code>results/demo_output.txt</code>, <code>results/hierarchy_output.txt</code>, <code>docs/figures/architecture.png</code>, <code>docs/figures/hierarchy.png</code>, the final report PDF, and <code>results/demo.vcd</code> in a waveform viewer if you have one (optional).</li>
+    <li>&#9744; Phone hotspot as a backup if the room Wi-Fi fails. Everything above also works offline from the cloned repo.</li>
+    <li>&#9744; Each member re-reads sections 1-5, 13, 13b and the question banks (18-20) for their own area.</li>
+  </ul>
+
+  <h3>A plan for the 15 minutes</h3>
+  <table>
+    <tr><th style="width:12%">Minutes</th><th style="width:20%">Who</th><th>What to say or show</th></tr>
+    <tr><td>0-1</td><td>Mitul</td><td>Introduce all five by name. One sentence: "We compare Harvard, a shared single-port memory, and a cached hierarchy in Verilog, on one small controller."</td></tr>
+    <tr><td>1-3</td><td>Akshat</td><td>Block diagram, the program counter and instruction memory, the 8-bit instruction format (4-bit opcode + 4-bit address).</td></tr>
+    <tr><td>3-5</td><td>Ajeesh</td><td>Data memory and read/write control: LOAD, STORE, HALT decoding; the data path.</td></tr>
+    <tr><td>5-7</td><td>Vaibhav</td><td>Shared memory and address decoder (code 0-15, data 16-31); why a single port makes fetch wait.</td></tr>
+    <tr><td>7-10</td><td>Hardik</td><td>Run <code>make demo</code> (4 vs 6 cycles), then <code>make hierarchy</code> (the 6-cycle hierarchy table). Show the waveform.</td></tr>
+    <tr><td>10-12</td><td>Mitul</td><td>The Phase II idea: two tiny caches over one shared memory, <code>hold</code>, the formula N+1+I+D, the honest limits.</td></tr>
+    <tr><td>12-15</td><td>Everyone</td><td>Questions. <b>Any member can be asked anything.</b> Answer your own area; if it is someone else's, give the short answer and let them add.</td></tr>
+  </table>
+  <p class="small">The evaluators may skip your plan and start asking questions at once. That is fine: the question banks in sections 18-20 are written so that anyone can answer anywhere.</p>
+
+  <h3>Rules for answering well</h3>
+  <ul>
+    <li><b>Simple idea first, number second.</b> "Harvard has two separate memories so fetch and data access happen together; that is why 4 cycles instead of 6."</li>
+    <li><b>Say what you did yourself</b> and open the file or commit. Do not claim others' work.</li>
+    <li><b>Honest about AI:</b> "Starter code was drafted with AI assistance; I reviewed it, ran it and can explain it." Then explain it.</li>
+    <li><b>If you do not know:</b> say what you do know, then how you would find out (read the file, run a test). Never guess a number.</li>
+    <li><b>Do not argue about limits.</b> State them first: no branches, tiny caches, simulation only.</li>
+  </ul>
+</section>
+
+<!-- ============ 18 BANK A ============ -->
+<section class="page">
+  <h2>18. Question bank A: Verilog and digital design</h2>
+  <table class="compact">
+    <tr><th style="width:34%">Question</th><th>Answer (in our project's terms)</th></tr>
+    <tr><td>What is Verilog?</td><td>A hardware description language. We describe hardware (modules, wires, registers) and simulate it; it can also be synthesized to real hardware.</td></tr>
+    <tr><td>What is a module?</td><td>A block with input and output ports, e.g. <code>program_counter</code>. A bigger design instantiates modules inside other modules (<code>memory_system</code> contains the controller and memories).</td></tr>
+    <tr><td><code>wire</code> vs <code>reg</code>?</td><td><code>wire</code> is a connection driven by <code>assign</code> or a module output. <code>reg</code> holds a value assigned inside an <code>always</code> block (it becomes a flip-flop if clocked).</td></tr>
+    <tr><td>Combinational vs sequential logic?</td><td>Combinational: output depends only on current inputs (<code>assign</code>; our memory reads and the decoder). Sequential: has state updated on a clock edge (<code>always @(posedge clk)</code>; PC, accumulator, instruction register, memory writes).</td></tr>
+    <tr><td><code>=</code> vs <code>&lt;=</code>?</td><td>Blocking <code>=</code> executes in order; non-blocking <code>&lt;=</code> schedules all updates for the end of the time step, which is how real flip-flops behave. We use <code>&lt;=</code> in clocked blocks.</td></tr>
+    <tr><td>What does <code>always @(posedge clk)</code> mean?</td><td>Run this block on every rising clock edge: a clocked register.</td></tr>
+    <tr><td>What is reset in our design?</td><td>A synchronous reset: checked on the clock edge. It clears PC, ACC, IR, valid, halted and fault. It does <b>not</b> erase memory (tested).</td></tr>
+    <tr><td>What is a parameter / generate?</td><td><code>parameter</code> is a compile-time constant. <code>SHARED_BUS</code> selects Harvard (0) or shared (1); <code>generate if</code> builds one wiring or the other from the same file.</td></tr>
+    <tr><td>How is memory loaded?</td><td><code>$readmemh</code> reads hex files (<code>programs/demo.hex</code>, <code>data.hex</code>) into the memory array at simulation start.</td></tr>
+    <tr><td>Why are memory reads combinational but writes clocked?</td><td>Reads: <code>assign read_data = words[address]</code> gives the value immediately (like distributed RAM). Writes happen on the rising edge so state changes once per cycle. FPGA block RAM is usually synchronous-read: a listed limitation.</td></tr>
+    <tr><td>What is a testbench?</td><td>A Verilog module with no ports that drives clock and reset, loads programs, runs the design and checks results automatically. Ours: <code>tb/*.v</code>.</td></tr>
+    <tr><td>What is a VCD file?</td><td>Value Change Dump: signal values over time. Open it in a waveform viewer (GTKWave) to see clk, pc, fetch, read, write.</td></tr>
+    <tr><td>What is a finite state machine? Do you have one?</td><td>A machine with states and transitions. Our controller is simple: it is effectively running / halted with a valid bit, rather than a big FSM. Be ready to say this plainly.</td></tr>
+    <tr><td>What is a latch and did you avoid it?</td><td>An unintended memory element from incomplete combinational code. We used <code>assign</code> and clocked blocks only, so none arise.</td></tr>
+    <tr><td>Synthesizable vs simulation-only code?</td><td>Our RTL is synthesizable in style. The testbench uses simulation-only things (<code>$display</code>, <code>$readmemh</code> at start, <code>#</code> delays) and was not synthesized. We did <b>not</b> run synthesis; we say so.</td></tr>
+    <tr><td>What is the clock in the simulation?</td><td>10 ns period (<code>always #5 clk = ~clk</code>). It is a simulation clock, not a measured hardware speed.</td></tr>
+    <tr><td>How does the instruction decode work?</td><td>High nibble = opcode: 0 NOP, 1 LOAD, 2 STORE, F HALT, anything else illegal (halts, sets fault). Low nibble = data address. <code>read_write_control.v</code>.</td></tr>
+    <tr><td>Why a 4-bit PC?</td><td>16-byte instruction memory = 16 addresses = 4 bits. It wraps from 15 to 0.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 19 BANK B ============ -->
+<section class="page">
+  <h2>19. Question bank B: computer architecture, caches, our design</h2>
+  <table class="compact">
+    <tr><th style="width:34%">Question</th><th>Answer</th></tr>
+    <tr><td>Von Neumann vs Harvard?</td><td>Von Neumann: one memory and one path for code and data, so a fetch and a data access compete (the "von Neumann bottleneck"). Harvard: separate memories and paths, so both happen in the same cycle.</td></tr>
+    <tr><td>Where is Harvard used?</td><td>Microcontrollers (AVR, PIC), DSPs. Most PCs use a <b>modified Harvard</b>: one main memory, but separate L1 instruction and data caches. Our Phase II is exactly that shape.</td></tr>
+    <tr><td>What is a memory hierarchy and why?</td><td>Levels: small and fast near the CPU, large and slower below. It works because programs reuse data and nearby addresses (locality). Fast memory is expensive, big memory is slow; the hierarchy gives the speed of the small one at the size of the big one.</td></tr>
+    <tr><td>Temporal vs spatial locality?</td><td>Temporal: used again soon (repeated LOAD of the same address). Spatial: nearby addresses used soon (the next instruction). Our 4-byte line exploits spatial locality: 16 instructions cause only 4 misses.</td></tr>
+    <tr><td>Hit, miss, hit rate, miss penalty?</td><td>Hit: found in cache. Miss: not found, fetched from below. Hit rate = hits / accesses. Miss penalty = extra time: in our model exactly 1 cycle.</td></tr>
+    <tr><td>Direct-mapped vs set-associative vs fully associative?</td><td>Direct-mapped: each address has one possible line (ours: bit 2 selects). Associative: more than one possible line, fewer conflicts but more hardware. Ours conflicts: blocks 0 and 2 share line 0 and evict each other (12 cycles, "same line" test).</td></tr>
+    <tr><td>How is an address split?</td><td>Our 4-bit address = tag (bit 3) | index (bit 2) | offset (bits 1:0). Offset picks the byte in the 4-byte line, index picks the line, tag tells which block is there.</td></tr>
+    <tr><td>Write-through vs write-back?</td><td>Write-through: every store also goes to the lower memory (ours: simple, memory always correct). Write-back: write only the cache, write memory when evicting (needs dirty bits, faster, more complex).</td></tr>
+    <tr><td>Write-allocate vs no-allocate?</td><td>Ours is no-allocate on a store miss: the memory is written, the cache is not filled. If the byte is already cached, it is updated.</td></tr>
+    <tr><td>What is the AMAT formula?</td><td>Average memory access time = hit time + miss rate x miss penalty. Ours: hit time 0 extra, penalty 1 cycle, so extra cycles = number of misses.</td></tr>
+    <tr><td>What does <code>hold</code> do?</td><td>A controller input. While 1, PC, instruction register, accumulator and valid bit do not change and writes are suppressed, so the cache can finish copying the block. Tied to 0 in Phase I.</td></tr>
+    <tr><td>Why is data served before instruction on a double miss?</td><td>One port. The LOAD has already been fetched and is executing; the next fetch is younger. Data fill first, instruction fill next cycle. Costs 2 cycles total (test "fetch and LOAD miss together", 5 cycles).</td></tr>
+    <tr><td>Why does a store never conflict with a fill?</td><td>A store is gated by <code>!hold</code>: it only happens in a cycle where nothing misses, so the lower memory's single port is free.</td></tr>
+    <tr><td>Why is the hierarchy not faster than Harvard here?</td><td>In the Phase I Harvard model memories are always ready (zero miss cost), so the hierarchy can only match it. Against the shared single-port baseline it wins when there is reuse. The point is a realistic structure, not a speed record.</td></tr>
+    <tr><td>Is the cache coherent?</td><td>Yes in our design: stores write through and update the data cache if the byte is cached. The instruction cache is read-only and the program is never modified, so there is no stale code.</td></tr>
+    <tr><td>Why do you need a valid bit in a cache line?</td><td>At start the line holds garbage. Valid = 0 means "nothing here", so a tag match is never trusted.</td></tr>
+    <tr><td>What is a pipeline? Do you have one?</td><td>Overlapping stages. We have a two-stage overlap: fetch the next instruction while executing the current one (one instruction register). It is not a full CPU pipeline.</td></tr>
+    <tr><td>What is the cycle model?</td><td>Harvard N+1. Shared N+1+M. Hierarchy N+1+I+D. N = instructions including HALT, M = LOAD/STORE count, I = instruction misses, D = data LOAD misses.</td></tr>
+    <tr><td>Why N+1 and not N?</td><td>The first cycle only fetches (nothing to execute yet). After that one instruction executes per cycle while the next is fetched.</td></tr>
+    <tr><td>Real-world example of the bottleneck?</td><td>CPU waiting on slow DRAM; caches exist because of it. Also why GPUs and DSPs use separate or banked memories.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 20 BANK C ============ -->
+<section class="page">
+  <h2>20. Question bank C: testing, tools, GitHub, report, AI, and live changes</h2>
+  <table class="compact">
+    <tr><th style="width:34%">Question</th><th>Answer</th></tr>
+    <tr><td>How do you know it is correct?</td><td>Self-checking tests: 11 directed scenarios, 2000 random programs (Harvard and shared), and 7 directed + 3000 random programs on the hierarchy. Each compares against a software model and checks cycle counts, memory contents, access counts, port ownership.</td></tr>
+    <tr><td>Why random tests?</td><td>They find cases we would not think of. A fixed seed makes them repeatable.</td></tr>
+    <tr><td>What is a golden / reference model?</td><td>A simple software calculation of the right answer. Ours computes the expected accumulator, memory and even the expected cache hits/misses separately from the RTL.</td></tr>
+    <tr><td>What is Icarus Verilog? Why not Vivado/ModelSim?</td><td>Free, open-source simulator (<code>iverilog</code> + <code>vvp</code>); runs anywhere including GitHub's CI. We did not need vendor tools since we did not synthesize.</td></tr>
+    <tr><td>What does <code>make check</code> do?</td><td>Runs demo, the 11 scenarios, the 2000-program stress and the hierarchy test; fails if any check fails. Results are copied to <code>results/</code> only after a pass.</td></tr>
+    <tr><td>What is CI?</td><td>GitHub Actions runs <code>make check</code> on every pull request and push to main; a green tick means tests passed. Another workflow publishes the website.</td></tr>
+    <tr><td>Git workflow?</td><td>Each member forks, works on a branch, opens a pull request; another reviews, Mitul merges with a merge commit so each author's commits stay. No pushes straight to main.</td></tr>
+    <tr><td>What did <b>you</b> contribute?</td><td>Everyone: say your files, your PR number, and what the test checks. Akshat: #6 (16-byte program test). Ajeesh: #7 (copy chain) and #8 (data-path unit tests). Hardik: #9 (M = 1, 3, 5 sweep). Mitul: integration, controller, hierarchy, reports, repository. Vaibhav: his Phase II PR should be added (see section 15).</td></tr>
+    <tr><td>Where is the report?</td><td><code>output/pdf/HEXARCH_Final_Report.pdf</code>, source in <code>docs/report/</code>.</td></tr>
+    <tr><td>Did you use AI? How much?</td><td>Yes, disclosed in the report and README: starter code, figures and drafts. The team reviewed, ran and tested it. Be ready to explain your own part line by line.</td></tr>
+    <tr><td>What are the project's limits?</td><td>No branches or loops, 8-bit toy instruction set, caches of 8 bytes, combinational reads, no synthesis, no timing/area numbers, simulation only.</td></tr>
+    <tr><td>What would you do next?</td><td>Add branches so loops reuse instructions; synchronous-read memories; larger/associative caches; write-back; synthesize on an FPGA for area and frequency.</td></tr>
+  </table>
+
+  <h3>"Change the code live" questions (practice these)</h3>
+  <table class="compact">
+    <tr><th style="width:38%">They say...</th><th>Do / say</th></tr>
+    <tr><td>Add a new opcode (e.g. ADD)?</td><td>Add a decode line in <code>read_write_control.v</code> (e.g. opcode 3), include it in the legal set so it is not illegal, and add the ALU action in the controller's execute step. Add a testbench case.</td></tr>
+    <tr><td>Make the cache bigger?</td><td>Increase lines in <code>l1_cache.v</code> (more index bits, fewer tag bits). Straight-line programs then miss the same; reused data conflicts less.</td></tr>
+    <tr><td>Make a miss cost 2 cycles?</td><td>Keep <code>hold</code> high for one more cycle with a small counter. Then the formula becomes N + 1 + 2(I + D). The test's expected value changes the same way.</td></tr>
+    <tr><td>Show that data is served before instruction.</td><td>Run the "fetch and LOAD miss together" scenario (program LOAD 10, HALT); 5 cycles; see <code>fill_d</code> and <code>fill_i</code> in <code>hierarchy_system.v</code>.</td></tr>
+    <tr><td>Run it for me.</td><td><code>make demo</code>, <code>make test</code>, <code>make hierarchy</code>, <code>make stress</code>. Point at PASSED lines.</td></tr>
+    <tr><td>Show Harvard really overlaps.</td><td>In <code>results/demo_output.txt</code> cycle 2 shows Harvard F and R together, shared F is 0.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 21 CHEAT SHEET ============ -->
+<section class="page">
+  <h2>21. One-page cheat sheet (read this last, at 3:00 PM)</h2>
+  <div class="cols">
+    <div class="card b"><h3>The numbers</h3>
+      <ul class="plain">
+        <li><b>Demo program:</b> LOAD 0, STORE 1, HALT. data[0] = 7.</li>
+        <li><b>Harvard 4</b> cycles. <b>Shared 6.</b> <b>Hierarchy 6.</b></li>
+        <li><b>N+1</b>, <b>N+1+M</b>, <b>N+1+I+D</b></li>
+        <li>Memory: 16 B code + 16 B data = 32 B.</li>
+        <li>Instruction = 4-bit opcode + 4-bit address. 0 NOP, 1 LOAD, 2 STORE, F HALT.</li>
+        <li>Shared map: code 0-15, data 16-31.</li>
+        <li>Cache: 2 lines x 4 B, direct-mapped, tag = bit 3, index = bit 2, offset = bits 1:0. Miss = 1 cycle.</li>
+        <li>Tests: 11 scenarios, 2000 random, 7 + 3000 hierarchy.</li>
+        <li>Clock: 10 ns simulation. Tool: Icarus Verilog.</li>
+      </ul>
+    </div>
+    <div class="card o"><h3>The one-liners</h3>
+      <ul class="plain">
+        <li><b>Why Harvard is faster:</b> fetch and data access happen together.</li>
+        <li><b>Why shared waits:</b> one port, so a fetch is blocked while LOAD/STORE use it.</li>
+        <li><b>Hierarchy:</b> two small caches over one shared memory (modified Harvard).</li>
+        <li><b>Hit = free, miss = 1 cycle pause (<code>hold</code>).</b></li>
+        <li><b>Double miss:</b> data first (one port).</li>
+        <li><b>Store:</b> write-through, never during a pause.</li>
+        <li><b>Valid bit:</b> a blocked fetch leaves the old instruction in the IR; valid says do not run it twice.</li>
+        <li><b>Honest limit:</b> hierarchy never beats pure Harvard in our model; it models reality and beats shared-only with reuse.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cols" style="margin-top:10px">
+    <div class="card"><h3>Who owns what</h3>
+      <ul class="plain">
+        <li><b>Akshat:</b> program counter, instruction memory, hex program.</li>
+        <li><b>Ajeesh:</b> data memory, read/write control.</li>
+        <li><b>Vaibhav:</b> shared memory, address decoder, fetch-stall rule.</li>
+        <li><b>Hardik:</b> testbenches, results, waveforms.</li>
+        <li><b>Mitul:</b> top level, controller, hierarchy, report, repo.</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Commands</h3>
+<pre style="margin:0">make demo
+make test
+make stress
+make hierarchy
+make check    # all
+make report2  # final PDF</pre>
+    </div>
+  </div>
+  <div class="callout g" style="margin-top:12px"><b>Before you leave home:</b> charged laptop, repo cloned, <code>make check</code> run once, all five members know the room (A408) and the time (3:25 PM). Arrive 3:10 PM. Attendance for the lab is in the same room.</div>
 </section>
 
 </body>
