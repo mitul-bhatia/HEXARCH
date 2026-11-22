@@ -130,6 +130,6 @@ The 11 scenarios include the demo, address boundaries, no data access, HALT only
 
 </details>
 
-**Scope.** The optional shared lower-level memory from the brief is planned for Phase II. This is a simulation prototype; hardware clock speed and FPGA resources have not been measured. Starter code and drafts were prepared with AI assistance, as the report's acknowledgment states.
+**Scope.** Phase II adds the optional shared lower-level memory (split caches over one shared memory): see [docs/PHASE2.md](docs/PHASE2.md) and `make hierarchy`. This is a simulation prototype; hardware clock speed and FPGA resources have not been measured. Starter code and drafts were prepared with AI assistance, as the report's acknowledgment states.
 
 <div align="center"><sub><b>Phase I deadline:</b> 16 November 2026, 11:59 PM IST</sub></div>

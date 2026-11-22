@@ -44,4 +44,4 @@ Every member should be able to explain the whole project, not only their own par
 
 ## Phase II (70%)
 
-Keep developing the same repository with the same individual history. Each member should be ready to explain the design and their own commits in the interview; the [study guide](https://mitul-bhatia.github.io/HEXARCH/) has likely questions. Possible extensions: the optional shared lower-level memory, a synchronous-read memory model, and synthesis results.
+Keep developing the same repository with the same individual history. Each member should be ready to explain the design and their own commits in the interview; the [study guide](https://mitul-bhatia.github.io/HEXARCH/) has likely questions. Phase II built: the shared lower-level memory with split caches, see [PHASE2.md](PHASE2.md) (per-member tasks included). Still possible: a synchronous-read memory model and synthesis results.

@@ -1,0 +1,371 @@
+\documentclass[conference,a4paper]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\ttdefault}{cmtt}
+\graphicspath{{docs/figures/}}
+\hypersetup{pdftitle={Instruction and Data Memory Hierarchy (Final Report)},pdfauthor={Team HEXARCH, Section A}}
+
+\title{Instruction and Data Memory Hierarchy:\\Harvard, von Neumann-Style and Cached Hierarchy Comparison}
+\author{\IEEEauthorblockN{Akshat Chauhan, Ajeesh Amreet, Vaibhav,\\
+Hardik Maheshwari and Mitul Bhatia}
+\IEEEauthorblockA{Team HEXARCH, Section A --- MCA Project 9, 2026\\
+Newton School of Technology, Rishihood University\\
+mitul.bhatia2024@nst.rishihood.edu.in}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper presents a simplified Harvard memory organization in Verilog and
+compares it with two other organizations, using one small controller. The
+baselines are a von Neumann-style single shared memory and, new in the final
+phase, a two-level hierarchy: separate instruction and data caches
+backed by one shared single-port lower-level memory. On a
+three-instruction program (LOAD, STORE, HALT) the Harvard design needs four
+cycles, the shared design six and the hierarchy six, all with identical
+final memory. Self-checking simulation of directed scenarios and 2000 and 3000
+random programs shows that the cycle counts follow $T_H=N+1$,
+$T_S=N+1+M$ and $T_C=N+1+I+D$, where $N$ is the number of instructions
+executed, $M$ the number of data accesses, and $I$ and $D$ the instruction
+and data-load cache misses. A cache hit costs nothing, and every miss costs
+exactly one cycle, so caches recover Harvard speed when code and data are
+reused.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Address decoding, Harvard architecture, instruction fetch, memory
+organization, Verilog, von Neumann architecture.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Instructions tell a controller what operation to perform; data are the
+values being used. In a von Neumann (stored-program) machine, both reside
+in one memory reached through one path~\cite{vonneumann}, so an
+instruction fetch and a data access cannot use that path in the same
+cycle~\cite{backus}. A Harvard organization gives instructions and data
+separate memories and paths~\cite{aiken}, so the next instruction can be
+fetched while the current one reads or writes data.
+
+This project implements both organizations around one small controller
+and measures the difference cycle by cycle. It covers instruction/data
+separation, address decoding, read/write control, simulation waveforms and
+an architecture comparison. Phase~I built the Harvard design and a
+single-memory baseline. Phase~II adds the brief's optional shared lower-level
+memory: two tiny caches (one for instructions, one for data) in front of one
+shared memory, which is the hierarchy of the project title.
+
+\section{Literature Review}
+\subsection{Von Neumann and Harvard Organizations}
+Von Neumann's 1945 EDVAC report described a stored-program computer whose
+instructions and data reside in a single memory~\cite{vonneumann}.
+Backus later called the single channel between processor and memory the
+``von Neumann bottleneck''~\cite{backus}. The Harvard Mark~I, described
+by Aiken and Hopper, instead read its instruction sequence from punched
+tape, separate from the registers that held its data~\cite{aiken}.
+``Harvard architecture'' now denotes any design with separate instruction
+and data storage and paths.
+
+\subsection{Modified Harvard Designs and Split Caches}
+Most general-purpose processors keep one unified main memory but split
+the first level of the memory hierarchy into instruction and data caches,
+so that an instruction fetch and a data access can proceed in the same
+cycle~\cite{hp,smith}. When fetch and load/store compete for a single
+memory port in a pipeline, the result is a structural hazard that forces
+a stall~\cite{hp}. The stall in our shared design is a minimal instance
+of this hazard.
+
+\subsection{Microcontroller Practice}
+Small embedded processors use Harvard memories directly. Microchip's
+enhanced mid-range PIC has independent instruction and data buses and a
+two-stage pipeline in which the next instruction is fetched while the
+current one executes~\cite{pic}. The AVR core likewise separates program
+and data memory and pre-fetches the next instruction during
+execution~\cite{avr}. Our single instruction register reproduces this
+fetch/execute overlap; the model uses its own four-opcode instruction set
+and does not emulate either processor.
+
+\subsection{Design Language and Tools}
+The RTL is written in Verilog~\cite{ieee1364}; the self-checking
+testbenches use SystemVerilog constructs~\cite{ieee1800}. Both are
+compiled and simulated with Icarus Verilog~\cite{icarus}.
+
+\section{Proposed Solution}
+\subsection{Memories and Controller}
+The Harvard configuration has a $16\times8$-bit instruction memory and a
+$16\times8$-bit data memory with independent ports; each decodes its own
+four-bit address. The von Neumann-style configuration has one
+$32\times8$-bit memory with a single port. Its address decoder maps
+instruction offsets to physical addresses 0--15 and data offsets to
+16--31. Both hold 32 bytes. Fig.~\ref{fig:architecture} shows the two
+organizations; one parameter, \texttt{SHARED\_BUS}, selects between them
+in \texttt{memory\_system.v}.
+
+The controller contains a four-bit program counter (PC), an eight-bit
+instruction register (IR) with a valid bit, and an eight-bit accumulator
+(ACC). The PC advances only when a fetch is accepted, and the IR holds the
+current instruction while the PC addresses the next one. The read/write
+control module decodes the IR into LOAD, STORE, HALT and illegal; the
+controller gates these with the valid bit to drive the data-read and
+data-write enables.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{architecture_report.png}
+\caption{Block diagram. Top: Harvard organization with independent
+instruction and data ports; the controller contains the program counter
+(PC), instruction register (IR), accumulator (ACC) and read/write
+control. Bottom: von Neumann-style baseline, in which the address decoder
+forms one 5-bit address for a single-port memory.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Instructions and Timing}
+The upper nibble of each instruction selects the operation and the lower
+nibble a data address: LOAD (\texttt{1a}) reads data[$a$] into ACC;
+STORE (\texttt{2a}) writes ACC to data[$a$]; HALT (\texttt{Fa}) stops;
+NOP (\texttt{0a}) performs no data operation. Other opcodes stop with a
+fault flag.
+
+Reads are combinational; LOAD captures data and STORE commits its write
+at the rising clock edge. A synchronous active-high reset clears the
+controller and suppresses memory requests while retaining memory
+contents. The 10-ns clock is a simulation setting, not a measured
+hardware frequency. Programs must fit in 16 instruction bytes and end in
+HALT, because the four-bit PC otherwise wraps.
+
+In Harvard mode, fetching the next instruction overlaps the current LOAD
+or STORE. In shared mode, data has priority: fetch is blocked, the PC
+holds and the valid bit clears, so the next cycle fetches the delayed
+instruction without repeating the previous one. HALT suppresses all
+further memory traffic.
+
+\subsection{Phase II: Cached Memory Hierarchy}
+Fig.~\ref{fig:hierarchy} shows the third configuration. The controller is
+unchanged except for one new input, \texttt{hold}, which freezes it for a
+cycle. Each of the two level-1 caches has two lines of four bytes and is
+direct-mapped: address bit~3 is the tag, bit~2 the line index and bits~1:0
+the byte in the line. The lower memory has 32 bytes and a single port, with
+the same map as the shared baseline (code 0--15, data 16--31). The rules are:
+\begin{itemize}
+\item A \emph{hit} behaves exactly like the Phase~I Harvard memories: no delay.
+\item A \emph{miss} holds the controller for one cycle while the whole
+4-byte block is copied from the lower memory into the cache.
+\item If both caches miss together, the data cache is served first, the
+instruction cache one cycle later, because the lower memory has one port.
+\item STORE is write-through: it updates the lower memory and the data cache
+(if the byte is cached). It never executes in a hold cycle, so it never
+competes with a miss for the port. A store miss does not allocate a line.
+\end{itemize}
+Because each fetched block holds four instructions, a straight-line program
+of $N$ instructions has only $\lceil N/4\rceil$ instruction misses.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{hierarchy.png}
+\caption{Phase II hierarchy: split level-1 caches over one shared
+single-port lower-level memory.}
+\label{fig:hierarchy}
+\end{figure}
+
+\section{Prototype and Verification}
+The demonstration program is \texttt{LOAD 0; STORE 1; HALT}, encoded as
+\texttt{10 21 F0}. Initially data[0] is 7 and all other data is zero.
+Both designs must finish with ACC~$=7$, data[0]~$=7$ and data[1]~$=7$,
+with all other data and all instructions unchanged.
+
+\texttt{make demo} prints the cycle-by-cycle table and writes a VCD
+waveform. \texttt{make test} runs six scenarios: the demonstration,
+boundary addresses (including a STORE immediately followed by a LOAD of
+the same address), no data accesses, HALT only, an invalid opcode, and a
+reset in the middle of a longer copy sequence. The testbench checks every
+final data word, that instructions are unchanged, that each design
+performs exactly the expected number of data operations, with the same
+read and write counts in both designs, PC advance and hold, exclusive use of the shared port,
+and inactivity after HALT. \texttt{make stress} runs 2000 random
+straight-line programs on both designs and compares them with a software
+model. \texttt{make hierarchy} runs seven directed programs and 3000 random
+programs on the cached hierarchy and on the Phase~I Harvard design. It checks
+the final accumulator and every data and instruction byte against a software
+model, that the lower-memory port is never written during a hold cycle, and the
+exact hit/miss counts against an independent software model of the caches.
+All checks pass with Icarus Verilog 13.0.
+
+\section{Results and Discussion}
+Table~\ref{tab:results} gives the measured cycles, counted from the
+first rising edge after reset release up to and including the cycle that
+executes HALT (or the invalid opcode).
+
+\begin{table}[t]
+\caption{Measured completion cycles. $N$: instructions executed;
+$M$: LOAD/STORE count; stalls: blocked shared fetches.}
+\label{tab:results}
+\centering
+\begin{tabular}{lrrrrr}
+\hline
+Scenario & $N$ & $M$ & Harvard & Shared & Stalls \\ \hline
+LOAD 0; STORE 1; HALT & 3 & 2 & 4 & 6 & 2 \\
+Address boundaries & 5 & 4 & 6 & 10 & 4 \\
+Two NOPs and HALT & 3 & 0 & 4 & 4 & 0 \\
+HALT only & 1 & 0 & 2 & 2 & 0 \\
+Invalid opcode & 1 & 0 & 2 & 2 & 0 \\
+Copy chain after reset & 7 & 6 & 8 & 14 & 6 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{waveforms_report.png}
+\caption{Demo controls, redrawn from the testbench trace and sampled
+before each rising edge, with the instruction each design executes.
+Harvard fetch overlaps the data read (cycle 2) and write (cycle 3);
+shared fetch is blocked in cycles 2 and 4.}
+\label{fig:waveforms}
+\end{figure}
+
+In cycle 1 both designs fetch LOAD. In cycle 2 the Harvard design
+executes LOAD and fetches STORE; in cycle 3 it executes STORE and fetches
+HALT, which executes in cycle 4. The shared design blocks fetch during
+LOAD (cycle 2) and STORE (cycle 4) and executes HALT in cycle 6
+(Fig.~\ref{fig:waveforms}). Both produce the expected value 7.
+
+\subsection{Cycle Model}
+The first cycle after reset only fetches. Every later cycle executes one
+instruction, and in the Harvard design it also fetches the next, so
+\begin{equation}
+T_H = N + 1.
+\end{equation}
+In the shared design each LOAD or STORE occupies the single port and
+moves the following fetch to an extra cycle, so
+\begin{equation}
+T_S = N + 1 + M, \qquad \frac{T_S}{T_H} = 1 + \frac{M}{N+1}.
+\end{equation}
+Every row of Table~\ref{tab:results} satisfies both expressions, as did
+all 2000 random programs. For the demonstration ($N=3$, $M=2$) the ratio
+is 1.5. Because a program that ends in HALT has $M\le N-1$, the ratio
+stays below 2, and it equals 1 when $M=0$. The benefit therefore depends
+on the workload rather than being a universal speed-up.
+
+\subsection{Hierarchy Results}
+Table~\ref{tab:hier} gives the measured cycles of the cached hierarchy against
+the Harvard design, with the number of instruction (I) and data (D) misses.
+
+\begin{table}[t]
+\caption{Cached hierarchy versus Harvard ($T_C=N+1+I+D$).}
+\label{tab:hier}
+\centering
+\begin{tabular}{lrrrrr}
+\hline
+Scenario & $N$ & Harvard & Hierarchy & I & D \\ \hline
+LOAD 0; STORE 1; HALT & 3 & 4 & 6 & 1 & 1 \\
+Four LOADs, one block & 6 & 7 & 10 & 2 & 1 \\
+Two data blocks (fit) & 5 & 6 & 10 & 2 & 2 \\
+Two blocks, same line & 5 & 6 & 12 & 2 & 4 \\
+Full 16-byte program & 16 & 17 & 21 & 4 & 0 \\
+Fetch and LOAD miss together & 2 & 3 & 5 & 1 & 1 \\
+STORE then LOAD (no allocate) & 4 & 5 & 7 & 1 & 1 \\ \hline
+\end{tabular}
+\end{table}
+
+The cost is always one cycle per miss. The ``Four LOADs, one block'' case
+shows the benefit: one miss serves four reads. The ``same line'' case shows
+the weakness of a tiny direct-mapped cache: two blocks that share a line evict
+each other, so every LOAD misses. The hierarchy never beats Phase~I Harvard
+(which has no miss cost in this model); its value is that it models a shared
+backing store, which real systems need because the small split memories hold
+only a part of the program and data.
+
+\subsection{Limitations}
+The caches are tiny, direct-mapped and write-through; there are no branches, so
+instruction reuse inside loops is not exercised. Memory reads are combinational, which matches asynchronous (distributed)
+RAM rather than the synchronous block RAM common on FPGAs; a
+synchronous-read memory would add fetch latency that is not modelled.
+There are no branches, and synthesis, resource use and maximum clock
+frequency have not been measured.
+
+\section{Individual Contributions}
+Table~\ref{tab:contrib} lists each member's area of responsibility; each
+member presents that part in the prototype video. The initial
+implementation was committed by Mitul Bhatia (see the Acknowledgment);
+each member's own commits in the project repository record the work they
+completed.
+
+\begin{table}[t]
+\caption{Responsibilities}
+\label{tab:contrib}
+\centering
+\begin{tabular}{p{0.24\columnwidth}p{0.66\columnwidth}}
+\hline
+Member & Responsibility \\ \hline
+Akshat Chauhan & Instruction path: program counter, instruction memory \\
+Ajeesh Amreet & Data path: data memory, read/write control \\
+Vaibhav & Shared memory, address decoder, fetch-stall rule \\
+Hardik Maheshwari & Simulation: testbenches, results, waveforms \\
+Mitul Bhatia & Integration: top level, controller, build, report, repository, video \\ \hline
+\multicolumn{2}{l}{Phase II (cached hierarchy):} \\
+Akshat Chauhan & Instruction cache checks \\
+Ajeesh Amreet & Data cache and write-through checks \\
+Vaibhav & Lower-level memory and single-port rule \\
+Hardik Maheshwari & Hierarchy simulation, results, waveform \\
+Mitul Bhatia & \texttt{hierarchy\_system}, controller hold, report \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+The project separates instruction and data paths in a Harvard organization
+and compares it with a single-port von Neumann-style baseline and with a
+cached two-level hierarchy, all built around one controller. Self-checking
+simulation shows identical results in every organization. The Harvard
+design saves exactly one cycle per data access over the shared baseline
+($T_S-T_H=M$). The hierarchy pays exactly one cycle per cache miss
+($T_C-T_H=I+D$), so reuse of instructions and data brings it close to Harvard
+speed while keeping one shared memory underneath. Future work could add a
+synchronous-read memory model, branches, larger or associative caches, and
+synthesis results. Source code, results and the video link are in the project
+repository: \url{https://github.com/mitul-bhatia/HEXARCH}.
+
+\section*{Acknowledgment}
+The Verilog RTL, testbenches, figures and parts of this text were drafted
+with the help of an AI assistant and were reviewed, run and checked by
+the team. The IEEEtran class by M.~Shell is used under the LaTeX Project
+Public License.
+
+\begin{thebibliography}{10}
+\bibitem{vonneumann} J. von Neumann, ``First draft of a report on the
+EDVAC,'' \textit{IEEE Ann. Hist. Comput.}, vol. 15, no. 4, pp. 27--75,
+1993, doi: 10.1109/85.238389.
+\bibitem{backus} J. Backus, ``Can programming be liberated from the von
+Neumann style? A functional style and its algebra of programs,''
+\textit{Commun. ACM}, vol. 21, no. 8, pp. 613--641, Aug. 1978,
+doi: 10.1145/359576.359579.
+\bibitem{aiken} H. H. Aiken and G. M. Hopper, ``The automatic sequence
+controlled calculator---I,'' \textit{Elect. Eng.}, vol. 65, no. 8--9,
+pp. 384--391, Aug.--Sep. 1946, doi: 10.1109/EE.1946.6434251.
+\bibitem{hp} J. L. Hennessy, D. A. Patterson, and C. Kozyrakis,
+\textit{Computer Architecture: A Quantitative Approach}, 7th ed.
+Cambridge, MA, USA: Morgan Kaufmann, 2025.
+\bibitem{smith} A. J. Smith, ``Cache memories,'' \textit{ACM Comput.
+Surv.}, vol. 14, no. 3, pp. 473--530, Sep. 1982,
+doi: 10.1145/356887.356892.
+\bibitem{pic} Microchip Technology, ``8-bit PIC MCU enhanced mid-range
+architectural overview,'' \textit{Developer Help}, Jan. 23, 2024.
+[Online]. Available:
+\url{https://developerhelp.microchip.com/xwiki/bin/view/products/mcu-mpu/8bit-pic/enhanced-family/mrarch/}.
+Accessed: Nov. 8, 2026.
+\bibitem{avr} Microchip Technology, ``AVR CPU core,'' \textit{Developer
+Help}, Nov. 10, 2023. [Online]. Available:
+\url{https://developerhelp.microchip.com/xwiki/bin/view/products/mcu-mpu/8-bit-avr/structure/core/}.
+Accessed: Nov. 8, 2026.
+\bibitem{ieee1364} \textit{IEEE Standard for Verilog Hardware Description
+Language}, IEEE Std 1364-2005, 2006, doi: 10.1109/IEEESTD.2006.99495.
+\bibitem{ieee1800} \textit{IEEE Standard for SystemVerilog---Unified
+Hardware Design, Specification, and Verification Language}, IEEE Std
+1800-2023, 2024, doi: 10.1109/IEEESTD.2024.10458102.
+\bibitem{icarus} S. Williams and contributors, ``Getting started with
+Icarus Verilog,'' \textit{Icarus Verilog documentation}, 2026. [Online].
+Available:
+\url{https://steveicarus.github.io/iverilog/usage/getting_started.html}.
+Accessed: Nov. 14, 2026.
+\end{thebibliography}
+\end{document}

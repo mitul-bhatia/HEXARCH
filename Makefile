@@ -7,7 +7,7 @@ RTL := $(wildcard rtl/*.v)
 
 # Simulation output is written to build/ first. It is copied into results/
 # only after the run passes, so a failing run never overwrites the evidence.
-.PHONY: demo test stress hierarchy check figures report guide site clean
+.PHONY: demo test stress hierarchy check figures report report2 guide site clean
 
 build/memory_compare.vvp: $(RTL) tb/tb_memory_compare.v
 	mkdir -p build
@@ -62,6 +62,13 @@ report:
 	TEXINPUTS=docs/report: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=build/report docs/report/phase1_report.tex
 	TEXINPUTS=docs/report: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=build/report docs/report/phase1_report.tex
 	cp build/report/phase1_report.pdf output/pdf/HEXARCH_Phase_I_Report.pdf
+
+# Final (Phase II) report
+report2:
+	mkdir -p build/report output/pdf
+	TEXINPUTS=docs/report: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=build/report docs/report/phase2_report.tex
+	TEXINPUTS=docs/report: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=build/report docs/report/phase2_report.tex
+	cp build/report/phase2_report.pdf output/pdf/HEXARCH_Final_Report.pdf
 
 # The study guide PDF is printed from its HTML source with headless Chrome.
 guide:
