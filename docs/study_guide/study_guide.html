@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>HEXARCH Study Guide</title>
+<title>HEXARCH Study Guide (Phase I + II)</title>
 <style>
   @page { size: A4; margin: 14mm 14mm 16mm; }
   :root { --ink:#172638; --blue:#145f9b; --orange:#a54c13; --green:#17745c; --mute:#5b6b7b; --line:#d5dce3; --bg:#f3f6f9; }
@@ -69,7 +69,7 @@
 <section class="page cover">
   <span class="pill">Project 9</span><span class="pill">MCA Projects 2026</span><span class="pill">Section A</span>
   <h1 style="margin-top:22px">HEXARCH<br>Study Guide</h1>
-  <p class="sub" style="font-size:14pt">Instruction and Data Memory Hierarchy, explained from zero.</p>
+  <p class="sub" style="font-size:14pt">Instruction and Data Memory Hierarchy, explained from zero. Now with Phase II: the cached hierarchy.</p>
 
   <div class="callout big" style="margin-top:26px">
     One sentence version: <span class="blue">separate paths for instructions and data</span> let a processor do two memory jobs in the same clock tick. A <span class="orange">shared single-port memory</span> has to do them one after another.
@@ -87,9 +87,14 @@
     <li>Tests, results and how to run everything</li>
     <li>Roles and what the evaluation needs</li>
     <li>Questions you may be asked</li>
-    <li>The video: how to record it, scene by scene</li>
+    <li>The video: how to record it, scene by scene (Phase I, done)</li>
+    <li><b>Phase II:</b> what is graded and what we must do</li>
+    <li><b>Phase II:</b> the memory hierarchy, explained from zero</li>
+    <li><b>Phase II:</b> the files, the tests and the results</li>
+    <li><b>Phase II:</b> status, what is left, and honest risks</li>
+    <li><b>Phase II:</b> interview preparation</li>
   </ol>
-  <p class="small" style="margin-top:30px">Team: Akshat Chauhan, Ajeesh Amreet, Vaibhav, Hardik Maheshwari, Mitul Bhatia. Phase I deadline: 16 November 2026, 11:59 PM IST.<br>Every number in this guide comes from a real simulation run (Icarus Verilog 13.0).</p>
+  <p class="small" style="margin-top:30px">Team: Akshat Chauhan, Ajeesh Amreet, Vaibhav, Hardik Maheshwari, Mitul Bhatia. Phase I (submitted) deadline was 16 November 2026. Phase II = final report, GitHub history and interview (70%).<br>Every number in this guide comes from a real simulation run (Icarus Verilog 13.0).</p>
 </section>
 
 <!-- ============ 1 BIG IDEA ============ -->
@@ -418,7 +423,7 @@ make stress   # 2000 random programs, prints STRESS PASSED</pre>
     <tr><td>Address decoder, read/write control</td><td><code>address_decoder.v</code>, <code>read_write_control.v</code> (enables gated in <code>simple_controller.v</code>)</td></tr>
     <tr><td>Analyze simultaneous access opportunities</td><td>Cycle table, overlap and stall counts, the N + 1 / N + 1 + M rule</td></tr>
     <tr><td>RTL, block diagram, waveforms, comparison</td><td><code>rtl/</code>, <code>docs/figures/</code>, <code>results/*.vcd</code>, report Table I</td></tr>
-    <tr><td>Optional shared lower-level memory</td><td>Not built (optional); a Phase II extension</td></tr>
+    <tr><td>Optional shared lower-level memory</td><td><b>Built in Phase II</b>: split caches over one shared single-port memory (<code>rtl/hierarchy_system.v</code>, sections 13-14)</td></tr>
   </table>
   <p class="small">Deadline: 16 November 2026, 11:59 PM IST. The plan and checklist are in <code>docs/TEAM_AND_PLAN.md</code>.</p>
 </section>
@@ -439,10 +444,10 @@ make stress   # 2000 random programs, prints STRESS PASSED</pre>
     <tr><td>What if a program has no HALT?</td><td>The 4-bit PC wraps after 16 instructions and the program repeats. The unused image bytes are filled with HALT (<code>F0</code>) to avoid this in our programs.</td></tr>
     <tr><td>How do you know both designs are fair?</td><td>Same controller, same program and data, same 32-byte total, same clock period. Only the memory wiring differs.</td></tr>
     <tr><td>How did you verify correctness?</td><td>An automatic testbench (six scenarios) and a 2000-program random test check every data word, access counts, PC behaviour, port ownership and halt behaviour.</td></tr>
-    <tr><td>What is not covered?</td><td>Caches, branches, a full instruction set, synthesis or FPGA measurement, real clock speed. The optional lower-level shared memory is omitted.</td></tr>
+    <tr><td>What is not covered?</td><td>Branches, a full instruction set, synthesis or FPGA measurement, real clock speed. (The optional shared lower-level memory with caches was added in Phase II.)</td></tr>
     <tr><td>Did you use AI?</td><td>The repository states starter code and drafts were prepared with AI assistance. Be ready to explain your own part and your own commits honestly.</td></tr>
     <tr><td>Is there a general formula?</td><td>Yes. Harvard = N + 1 cycles, shared = N + 1 + M, for N instructions with M LOAD/STORE. Checked on every test and 2000 random programs.</td></tr>
-    <tr><td>Why "hierarchy" if there is one level?</td><td>The project title is the course's. We implement the instruction/data split that sits at the top of real hierarchies (split L1 caches). The optional lower level is a Phase II extension.</td></tr>
+    <tr><td>Why "hierarchy" if there is one level?</td><td>The project title is the course's. We implement the instruction/data split that sits at the top of real hierarchies (split L1 caches). Phase II adds the lower level: two tiny caches over one shared memory, so it is now a real two-level hierarchy.</td></tr>
     <tr><td>What does F/R/W mean in the output?</td><td>Instruction fetch / data read / data write.</td></tr>
   </table>
 
@@ -455,7 +460,7 @@ make stress   # 2000 random programs, prints STRESS PASSED</pre>
 
 <!-- ============ 11 VIDEO ============ -->
 <section class="page" id="video">
-  <h2>11. The video: how to record it, scene by scene</h2>
+  <h2>11. (Phase I, submitted) The video: how to record it, scene by scene</h2>
   <div class="callout b"><b>Clickable version with a prompter:</b> <span class="blue">mitul-bhatia.github.io/HEXARCH/team.html#video</span>. Click a scene to see what to show, what to say and when to switch.</div>
   <div class="callout"><b>Must have:</b> at most 5:00 &middot; the project idea &middot; all five full names &middot; the working prototype. <b>This plan:</b> 7 scenes, about 3:40 of speech, about 4:40 with screen actions.</div>
   <h3>How it works</h3>
@@ -541,6 +546,188 @@ make stress   # 2000 random programs, prints STRESS PASSED</pre>
     <li>&#9744; Open the link in a logged-out private window; it must play.</li>
     <li>&#9744; Put the link and duration in <code>VIDEO.md</code>, commit, push, then submit the form.</li>
   </ul>
+</section>
+
+<!-- ============ 12 PHASE II REQUIREMENTS ============ -->
+<section class="page" id="phase2">
+  <h2>12. Phase II: what is graded and what we must do</h2>
+  <p>Phase I (30%) is submitted. <b>Phase II is 70%</b> of the project grade. The official message lists exactly three things:</p>
+  <table>
+    <tr><th style="width:26%">Phase II item</th><th>What the instructors wrote</th><th style="width:30%">Where we are</th></tr>
+    <tr><td><b>1. Final IEEE report</b></td><td>Abstract, Literature Review, Proposed Solution, <b>Results and Discussion</b>, Individual Contributions, <b>Conclusion</b>, References.</td><td class="green"><b>Written.</b> <code>output/pdf/HEXARCH_Final_Report.pdf</code> (source <code>docs/report/phase2_report.tex</code>, rebuild with <code>make report2</code>). All seven sections present.</td></tr>
+    <tr><td><b>2. GitHub repository</b></td><td>Keep maintaining it through Phase II. Version history and individual contributions count. All members contribute consistently; history shows development over time.</td><td class="orange"><b>Needs the team.</b> Mitul's commits are there. Each other member must make their own Phase II commits (section 15).</td></tr>
+    <tr><td><b>3. Project interview</b></td><td>Assesses understanding, implementation, individual contributions and overall work. All five must be involved and able to explain their part and the whole. Slots "will be shared soon".</td><td class="orange"><b>Prepare.</b> Sections 13 and 16 of this guide. Nobody has been told the slot yet.</td></tr>
+  </table>
+  <div class="callout o"><b>Not in Phase II:</b> a new video. The Phase II message does not ask for one. If the instructors ask for a demo in the interview, run <code>make demo</code>, <code>make test</code> and <code>make hierarchy</code> live.</div>
+
+  <h3>What "done" means for us</h3>
+  <ul class="plain">
+    <li class="ok">The hierarchy RTL exists and every test passes (<code>make check</code>).</li>
+    <li class="ok">The final IEEE report exists and covers all seven required sections.</li>
+    <li>&#9744; Every member has merged at least one own pull request in Phase II (their commits, their account).</li>
+    <li>&#9744; Every member can explain the whole project without notes (sections 13 and 16).</li>
+    <li>&#9744; The final report is submitted the way the instructors say once they announce it (form or upload: not yet announced).</li>
+  </ul>
+  <p class="small">Important: the instructors have not yet said how the Phase II report is submitted or when. Watch the course group and email. Our repository link is the same one used in Phase I.</p>
+</section>
+
+<!-- ============ 13 HIERARCHY FROM ZERO ============ -->
+<section class="page">
+  <h2>13. The memory hierarchy, explained from zero</h2>
+  <h3>Why add it?</h3>
+  <p>The project title is <i>Memory Hierarchy</i>, and the brief lists an <b>optional shared lower-level memory</b>. A hierarchy means several levels: small, fast memory close to the processor, backed by a bigger shared one below. In Phase I we compared Harvard with a shared memory. In Phase II we <b>combine</b> them: the Harvard split stays on top (two small <b>caches</b>), and one shared memory sits underneath.</p>
+  <img src="../figures/hierarchy.png" alt="Hierarchy diagram" style="width:78%;display:block;margin:6px auto">
+
+  <h3>A cache in one picture</h3>
+  <p>Think of a desk (cache) and a library shelf (shared memory). Reading a book from the desk is instant (<b>hit</b>). If it is not on the desk you walk to the shelf and bring a <b>whole stack of four books</b> back (<b>miss</b>): that costs one extra step. Next time any of those four is on the desk.</p>
+  <table class="compact">
+    <tr><th style="width:24%">Part</th><th>How it works in our design</th></tr>
+    <tr><td>Size</td><td>Each cache: <b>2 lines x 4 bytes</b>. One for instructions, one for data.</td></tr>
+    <tr><td>Address split (4-bit address)</td><td><b>bit 3 = tag</b> (which of two blocks), <b>bit 2 = line</b> (which of the two lines), <b>bits 1:0 = byte</b> inside the line. This is called <i>direct-mapped</i>: an address can live in only one line.</td></tr>
+    <tr><td>Hit</td><td>Line is valid and the tag matches: data returned at once, no delay (same as Phase I Harvard).</td></tr>
+    <tr><td>Miss</td><td>The controller <b>pauses for 1 cycle</b> (the <code>hold</code> signal) while the 4-byte block is copied from the lower memory into the line.</td></tr>
+    <tr><td>One port rule</td><td>The lower memory can serve only one thing per cycle. If both caches miss together, <b>data goes first</b>, instruction one cycle later.</td></tr>
+    <tr><td>STORE</td><td><b>Write-through</b>: written to the lower memory immediately, and to the data cache only if that byte is already cached. A store never happens during a pause, so it never fights a miss for the port.</td></tr>
+    <tr><td>Why 4 instructions per miss?</td><td>Instructions are read in order, so after one miss the next three fetches hit (spatial locality). A 16-byte program has only 4 instruction misses.</td></tr>
+  </table>
+  <div class="callout g"><b>The new formula.</b> <span class="big">Cycles = N + 1 + I + D</span> where N = instructions executed (with HALT), I = instruction-cache misses, D = data-LOAD misses. Every miss costs exactly one cycle. Compare: Harvard = N + 1, shared = N + 1 + M.</div>
+</section>
+
+<section class="page">
+  <h2>13b. Cycle by cycle: the demo on the hierarchy (6 cycles)</h2>
+  <p>Program: <code>LOAD 0, STORE 1, HALT</code>. This is real simulator output of <code>hierarchy_system</code>.</p>
+  <table>
+    <tr><th>Cycle</th><th>What happens</th><th>Why</th></tr>
+    <tr><td>1</td><td><span class="orange"><b>PAUSE</b></span>: fetch of LOAD at address 0 misses the instruction cache</td><td>Cache is empty. Block 0 (addresses 0-3, includes all three instructions) is copied in.</td></tr>
+    <tr><td>2</td><td>Fetch LOAD (hit)</td><td>Now in the cache.</td></tr>
+    <tr><td>3</td><td><span class="orange"><b>PAUSE</b></span>: LOAD executes, data address 0 misses the data cache. Everything freezes.</td><td>Data block 0 is copied in. The fetch of STORE waits, nothing is lost.</td></tr>
+    <tr><td>4</td><td>LOAD executes (hit, reads 7) and STORE is fetched (hit)</td><td>Fetch and data read together: the Harvard benefit.</td></tr>
+    <tr><td>5</td><td>STORE executes (writes 7 through to memory) and HALT is fetched (hit)</td><td>Write-through. HALT is in the same block, no miss.</td></tr>
+    <tr><td>6</td><td>HALT executes</td><td>Done.</td></tr>
+  </table>
+  <p><b>N = 3, I = 1, D = 1, so 3 + 1 + 1 + 1 = 6 cycles.</b> Harvard needs 4, shared needs 6. Same answer in memory (data[0] = 7, data[1] = 7).</p>
+
+  <h3>The seven hand-picked programs and what each one teaches</h3>
+  <table class="compact">
+    <tr><th>Program</th><th>N</th><th>Harvard</th><th>Hierarchy</th><th>I miss</th><th>D miss</th><th>Lesson</th></tr>
+    <tr><td>demo: LOAD 0, STORE 1</td><td>3</td><td>4</td><td>6</td><td>1</td><td>1</td><td>The walk-through above</td></tr>
+    <tr><td>Four LOADs, same block</td><td>6</td><td>7</td><td>10</td><td>2</td><td>1</td><td><b>One miss serves four reads</b> (the benefit)</td></tr>
+    <tr><td>Two data blocks that fit</td><td>5</td><td>6</td><td>10</td><td>2</td><td>2</td><td>Two lines hold two blocks</td></tr>
+    <tr><td>Two blocks, same line</td><td>5</td><td>6</td><td>12</td><td>2</td><td>4</td><td><b>Thrashing</b>: they evict each other, every LOAD misses (the weakness)</td></tr>
+    <tr><td>Full 16-byte program</td><td>16</td><td>17</td><td>21</td><td>4</td><td>0</td><td>16 / 4 = 4 instruction misses</td></tr>
+    <tr><td>Fetch and LOAD miss together</td><td>2</td><td>3</td><td>5</td><td>1</td><td>1</td><td>One port: data first, then instruction</td></tr>
+    <tr><td>STORE then LOAD</td><td>4</td><td>5</td><td>7</td><td>1</td><td>1</td><td>A store miss does not fill the cache; the LOAD then misses</td></tr>
+  </table>
+  <div class="callout b"><b>Honest conclusion to say in the interview.</b> In our model the hierarchy is never faster than the pure Phase I Harvard (that one has no miss cost). Its value is that it models what real machines do: the small split memories cannot hold everything, so they sit above one shared memory. Compared with the shared-only baseline it is faster whenever code and data are reused.</div>
+</section>
+
+<!-- ============ 14 FILES AND TESTS ============ -->
+<section class="page">
+  <h2>14. Phase II: the files, the tests and the results</h2>
+  <table>
+    <tr><th style="width:30%">File</th><th>What it does</th></tr>
+    <tr><td><code>rtl/l1_cache.v</code></td><td>The tiny cache (2 lines x 4 bytes, valid + tag + data). Used twice.</td></tr>
+    <tr><td><code>rtl/lower_memory.v</code></td><td>The shared 32-byte memory, one port. Returns a 4-byte block on a miss, writes one byte on a STORE.</td></tr>
+    <tr><td><code>rtl/hierarchy_system.v</code></td><td>Connects controller + two caches + lower memory. Creates <code>hold</code> = a miss is happening. Gives the data cache priority.</td></tr>
+    <tr><td><code>rtl/simple_controller.v</code></td><td>Gained one input: <code>hold</code>. When 1, the controller freezes. It is tied to 0 in the Phase I designs, so <b>Phase I results did not change</b>.</td></tr>
+    <tr><td><code>tb/tb_hierarchy.v</code></td><td>Self-checking test, run by <code>make hierarchy</code>.</td></tr>
+    <tr><td><code>results/hierarchy_output.txt</code></td><td>Saved test output (evidence).</td></tr>
+    <tr><td><code>docs/report/phase2_report.tex</code></td><td>The final IEEE report. PDF: <code>output/pdf/HEXARCH_Final_Report.pdf</code>.</td></tr>
+    <tr><td><code>docs/PHASE2.md</code></td><td>Short explanation and per-member tasks.</td></tr>
+  </table>
+
+  <h3>Run it</h3>
+<pre>make hierarchy   # Phase II test: prints HIERARCHY PASSED
+make check       # everything: demo + 11 scenarios + 2000 random + hierarchy
+make report2     # rebuilds the final report PDF</pre>
+
+  <h3>What <code>make hierarchy</code> proves</h3>
+  <ul class="plain">
+    <li class="ok">7 directed and 3000 random programs run on the hierarchy <b>and</b> on the Phase I Harvard design: the final accumulator, every data byte and every instruction byte are the same, and match a software model.</li>
+    <li class="ok">Cycles = N + 1 + I + D in <b>every</b> program.</li>
+    <li class="ok">The expected hit/miss counts come from a separate software model of the cache, written independently of the RTL, so the test is not marking its own homework.</li>
+    <li class="ok">The lower-memory port is never written during a pause.</li>
+  </ul>
+  <p class="small">Automatic check on GitHub: every pull request runs <code>make check</code> and the site check. A green tick means all of it passed.</p>
+
+  <h3>The final report: section by section</h3>
+  <table class="compact">
+    <tr><th style="width:34%">Required</th><th>Where in the report</th></tr>
+    <tr><td>Abstract</td><td>Top: three designs, the three formulas</td></tr>
+    <tr><td>Literature Review</td><td>Von Neumann, Harvard, split caches, microcontrollers, tools (with references)</td></tr>
+    <tr><td>Proposed Solution</td><td>Memories, controller, timing and the new subsection "Phase II: Cached Memory Hierarchy" with Fig. 2</td></tr>
+    <tr><td>Results and Discussion</td><td>Table I (Harvard vs shared), Table II-style hierarchy results, cycle model, limitations</td></tr>
+    <tr><td>Individual Contributions</td><td>Table with Phase I and Phase II responsibilities per member</td></tr>
+    <tr><td>Conclusion</td><td>All three designs compared, future work</td></tr>
+    <tr><td>References</td><td>Same list as Phase I</td></tr>
+  </table>
+</section>
+
+<!-- ============ 15 STATUS / LEFT / RISKS ============ -->
+<section class="page">
+  <h2>15. Status: what is done, what is left, what could go wrong</h2>
+  <h3 class="green">Done</h3>
+  <ul class="plain">
+    <li class="ok">Phase I: report, video, repository (submitted).</li>
+    <li class="ok">Phase II design: hierarchy RTL + tests, all passing; Phase I results unchanged.</li>
+    <li class="ok">Final IEEE report with all seven sections.</li>
+    <li class="ok">Study guide, requirement checklist and team tasks updated (this document).</li>
+  </ul>
+
+  <h3 class="orange">Left to do (people, not code)</h3>
+  <table>
+    <tr><th style="width:22%">Who</th><th>What</th></tr>
+    <tr><td><b>Akshat</b></td><td>Own PR: add a directed test showing instruction misses = ceil(N/4) for N = 5 and N = 9. Read sections 13, 14, 16.</td></tr>
+    <tr><td><b>Ajeesh</b></td><td>Own PR: a test where a STORE hits a cached byte, then a LOAD of it reads the new value with no miss.</td></tr>
+    <tr><td><b>Vaibhav</b></td><td>Own PR: a check that the lower-memory port is never read and written in the same cycle. <b>Important: no PR from Vaibhav appears in the history yet; this one matters most.</b></td></tr>
+    <tr><td><b>Hardik</b></td><td>Own PR: waveform dump of the hierarchy demo plus a screenshot in <code>docs/figures/</code>.</td></tr>
+    <tr><td><b>Mitul</b></td><td>Merge the PRs with merge commits, regenerate <code>results/</code> once, rebuild the report and this guide, submit when the instructors announce how.</td></tr>
+    <tr><td><b>Everyone</b></td><td>Read sections 13 and 16. Practise explaining the 6-cycle table and your own files without notes. Exact steps for the PRs are in <code>docs/PHASE2.md</code> and the Team hub.</td></tr>
+  </table>
+
+  <h3 class="orange">Problems and risks (be aware, none is fatal)</h3>
+  <table class="compact">
+    <tr><th style="width:30%">Risk</th><th>What to do</th></tr>
+    <tr><td><b>Uneven commit history.</b> The graders review it; one author dominates.</td><td>Each member's own PR from their own fork and account. Nobody commits for anyone else. Do it as early as possible so the history shows time.</td></tr>
+    <tr><td><b>Interview: members cannot explain.</b></td><td>The guide is written for this. Everyone should know the 6-cycle table, the three formulas and their own files. If you did not write something, say so honestly and explain how it works.</td></tr>
+    <tr><td><b>AI assistance.</b> The report and README disclose it.</td><td>Be honest. Be able to explain every line of your own part. "I understand it and tested it" is a good answer.</td></tr>
+    <tr><td><b>Phase II submission format unknown.</b></td><td>Instructors said details come soon. Watch for them; the PDF and repo are ready.</td></tr>
+    <tr><td><b>Phase I video link.</b> It points to a Google Drive <i>folder</i>.</td><td>Check once in a private window that "anyone with the link" works and the video is inside.</td></tr>
+    <tr><td><b>Model limits.</b> No branches, tiny caches, combinational reads, no synthesis numbers.</td><td>They are stated in the report's Limitations. Say them first in the interview; nobody can fault an honest limit.</td></tr>
+    <tr><td><b>The hierarchy is not faster than Harvard.</b></td><td>Expected: the model has no real miss penalty for Harvard. Explain that the hierarchy is about realism (small split memories over one shared memory) and beats the shared-only baseline when data and code are reused.</td></tr>
+    <tr><td><b>Old Phase I PR pages</b> still show old commits (history was cleaned earlier).</td><td>Known, harmless. Do not worry about it.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 16 INTERVIEW ============ -->
+<section class="page">
+  <h2>16. Phase II interview preparation</h2>
+  <p>The instructors will ask each of you about <b>the project, the implementation, and your own contribution</b>. Slots are not announced yet. Practise these.</p>
+  <h3>Questions about the whole project</h3>
+  <table>
+    <tr><th style="width:34%">Question</th><th>Short answer</th></tr>
+    <tr><td>What does the project do?</td><td>Implements Harvard (separate instruction and data memories), a shared single-port memory, and a cached hierarchy in Verilog, runs the same programs on all of them, and compares cycles.</td></tr>
+    <tr><td>What is new in Phase II?</td><td>The optional shared lower-level memory: two tiny caches (instruction and data) over one shared memory. A miss pauses the controller for 1 cycle.</td></tr>
+    <tr><td>What is a cache hit and a miss?</td><td>Hit: the byte is already in the small memory, no delay. Miss: it is not; the block is copied from the lower memory, costing one cycle.</td></tr>
+    <tr><td>Why four bytes per line?</td><td>Instructions are read in order, so one miss brings the next three; cuts instruction misses to N/4.</td></tr>
+    <tr><td>What is direct-mapped?</td><td>Each address can be in only one line (chosen by address bit 2). Simple, but two addresses can evict each other (our "same line" test: 12 cycles).</td></tr>
+    <tr><td>Why is there one port on the lower memory and what does it cause?</td><td>It models a shared bus. Two misses together are served one at a time: data first.</td></tr>
+    <tr><td>What is write-through? Why?</td><td>Every STORE also updates the lower memory, so memory is always right. Simpler than write-back (no dirty bits).</td></tr>
+    <tr><td>How does the controller pause?</td><td>A <code>hold</code> input freezes PC, instruction register, accumulator and valid bit for a cycle. Phase I ties it to 0, so Phase I is unchanged.</td></tr>
+    <tr><td>What are the formulas?</td><td>Harvard N+1. Shared N+1+M. Hierarchy N+1+I+D.</td></tr>
+    <tr><td>How did you test?</td><td>Self-checking testbenches; 2000 and 3000 random programs compared with software models; an independent software cache model predicts every hit and miss.</td></tr>
+    <tr><td>What are the limits?</td><td>Tiny caches, no branches or loops, combinational reads, no synthesis or real timing, write-through only.</td></tr>
+    <tr><td>How could it be extended?</td><td>Synchronous-read memories, branches and loops (instruction reuse), bigger or associative caches, FPGA synthesis for area and clock.</td></tr>
+  </table>
+  <h3>Personal questions (each person)</h3>
+  <ul>
+    <li>Which files did you write or own, and what does each do? Open one and explain a few lines.</li>
+    <li>Which commit or pull request is yours? What did your test check?</li>
+    <li>Walk through the 6-cycle hierarchy table in your own words.</li>
+    <li>What would you change or add next?</li>
+  </ul>
+  <div class="callout g"><b>Tip.</b> Start answers with the simple idea, then the cycle count. If you do not know, say what you do know and how you would find out. Be honest about AI help: you reviewed, ran and can explain it.</div>
+  <div class="callout b"><b>Your five-minute checklist before the interview:</b> run <code>make check</code>; open the Team hub; look at <code>results/demo_output.txt</code> and <code>results/hierarchy_output.txt</code>; reread sections 5, 13 and 13b.</div>
 </section>
 
 </body>
