@@ -7,7 +7,7 @@ RTL := $(wildcard rtl/*.v)
 
 # Simulation output is written to build/ first. It is copied into results/
 # only after the run passes, so a failing run never overwrites the evidence.
-.PHONY: demo test stress check figures report guide site clean
+.PHONY: demo test stress hierarchy check figures report guide site clean
 
 build/memory_compare.vvp: $(RTL) tb/tb_memory_compare.v
 	mkdir -p build
@@ -37,7 +37,18 @@ stress: build/random_stress.vvp
 	@$(PYTHON) -c 'from pathlib import Path; assert "STRESS PASSED" in Path("build/stress_output.txt").read_text(), "Stress test failed; inspect build/stress_output.txt"'
 	cp build/stress_output.txt results/
 
-check: demo test stress
+build/hierarchy.vvp: $(RTL) tb/tb_hierarchy.v
+	mkdir -p build
+	$(IVERILOG) -g2012 -Wall -s tb_hierarchy -o $@ $(RTL) tb/tb_hierarchy.v
+
+# Phase II: Harvard L1 caches over one shared lower-level memory.
+hierarchy: build/hierarchy.vvp
+	mkdir -p build results
+	$(VVP) build/hierarchy.vvp | tee build/hierarchy_output.txt
+	@$(PYTHON) -c 'from pathlib import Path; assert "HIERARCHY PASSED" in Path("build/hierarchy_output.txt").read_text(), "Hierarchy test failed; inspect build/hierarchy_output.txt"'
+	cp build/hierarchy_output.txt results/
+
+check: demo test stress hierarchy
 
 figures:
 	$(PYTHON) scripts/make_figures.py

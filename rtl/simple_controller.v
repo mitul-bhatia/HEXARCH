@@ -6,6 +6,7 @@ module simple_controller #(
     parameter SHARED_BUS = 0
 ) (
     input wire clk, reset,
+    input wire hold,   // Phase II: freeze while a cache miss is served (0 in Phase I)
     input wire [7:0] instruction_data, data_read_data,
     output wire [3:0] pc, data_address,
     output wire fetch_enable, data_read_enable, data_write_enable,
@@ -14,6 +15,7 @@ module simple_controller #(
 );
     wire load, store, halt, illegal;
     wire running = !reset && !halted;
+    wire go = !hold;
     wire stop_now = execute_valid && (halt || illegal);
     wire data_access = data_read_enable || data_write_enable;
 
@@ -28,7 +30,7 @@ module simple_controller #(
     assign fetch_enable = running && !stop_now && !(SHARED_BUS && data_access);
 
     program_counter counter (.clk(clk), .reset(reset),
-        .enable(fetch_enable), .address(pc));
+        .enable(fetch_enable && go), .address(pc));
 
     always @(posedge clk) begin
         if (reset) begin
@@ -37,7 +39,7 @@ module simple_controller #(
             execute_valid <= 1'b0;
             halted <= 1'b0;
             fault <= 1'b0;
-        end else if (!halted) begin
+        end else if (!halted && go) begin
             if (execute_valid) begin
                 if (load) accumulator <= data_read_data;
                 if (halt || illegal) halted <= 1'b1;

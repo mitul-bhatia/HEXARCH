@@ -1,0 +1,10 @@
+Scenario               Program size, cycles and cache events
+PASS demo_copy              N=3  Harvard=4  Hierarchy=6  I-miss=1  D-miss=1  ACC=7
+PASS data_reuse             N=6  Harvard=7  Hierarchy=10  I-miss=2  D-miss=1  ACC=4
+PASS two_data_blocks        N=5  Harvard=6  Hierarchy=10  I-miss=2  D-miss=2  ACC=6
+PASS conflict_thrash        N=5  Harvard=6  Hierarchy=12  I-miss=2  D-miss=4  ACC=9
+PASS full_16_byte_program   N=16  Harvard=17  Hierarchy=21  I-miss=4  D-miss=0  ACC=0
+PASS instr_and_data_miss    N=2  Harvard=3  Hierarchy=5  I-miss=1  D-miss=1  ACC=85
+PASS store_then_load        N=4  Harvard=5  Hierarchy=7  I-miss=1  D-miss=1  ACC=66
+HIERARCHY PASSED: 3007 programs; results match the Harvard design and the software model; cycles = N + 1 + I-misses + D-misses every time.
+tb/tb_hierarchy.v:172: $finish called at 451456000 (1ps)
