@@ -13,7 +13,7 @@ module memory_system #(
 );
     wire [7:0] instruction_data, data_read_data;
     simple_controller #(.SHARED_BUS(SHARED_BUS)) controller (
-        .clk(clk), .reset(reset), .instruction_data(instruction_data),
+        .clk(clk), .reset(reset), .hold(1'b0), .instruction_data(instruction_data),
         .data_read_data(data_read_data), .pc(pc), .data_address(data_address),
         .fetch_enable(fetch_enable), .data_read_enable(data_read_enable),
         .data_write_enable(data_write_enable), .accumulator(accumulator),

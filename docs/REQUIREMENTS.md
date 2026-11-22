@@ -10,7 +10,7 @@
 | Data Memory | `rtl/data_memory.v`, 16 x 8 bits, loaded from `programs/data.hex`; combinational read, rising-edge write | Met |
 | Address Decoder | `rtl/address_decoder.v`: in the shared memory, instructions at 0-15 and data at 16-31. In the Harvard memories each 4-bit address is used directly | Met |
 | Read/Write Control | `rtl/read_write_control.v` decodes the instruction into LOAD (read), STORE (write), HALT and illegal; `rtl/simple_controller.v` lines 25-28 gate these into the read, write and fetch enables | Met |
-| Optional Shared Lower-Level Memory | Not implemented (optional); named as a Phase II extension in the report | Optional |
+| Optional Shared Lower-Level Memory | Phase II: `rtl/hierarchy_system.v`, `rtl/l1_cache.v`, `rtl/lower_memory.v`; `make hierarchy` | Met |
 | Independent instruction and data paths | `rtl/memory_system.v`, `harvard_path` block | Met |
 | Connected to a simple processor or controller | `rtl/simple_controller.v`: PC, instruction register with valid bit, accumulator | Met |
 | Execute programs with fetches and data accesses | `make demo` (LOAD/STORE/HALT), `make test` (11 scenarios), `make stress` (2000 random programs) | Met |
@@ -26,8 +26,18 @@
 | Requirement | Marks | Evidence | Status |
 | --- | ---: | --- | --- |
 | IEEE report with abstract, literature review, proposed solution, individual contributions, references | 10 | [`output/pdf/HEXARCH_Phase_I_Report.pdf`](../output/pdf/HEXARCH_Phase_I_Report.pdf), IEEEtran source in `docs/report/` | Met |
-| Video at most 5 minutes: idea, all five names, working prototype | 15 | [`output/HEXARCH_demo_final.mp4`](../output/HEXARCH_demo_final.mp4), Google Drive upload (4:53) | Met |
+| Video at most 5 minutes: idea, all five names, working prototype | 15 | Google Drive upload (4:53), link in [`VIDEO.md`](../VIDEO.md) | Met |
 | GitHub: report, video link, prototype files, artefacts | 5 | This repository; [`VIDEO.md`](../VIDEO.md) holds the video link | Met |
 | GitHub: every member's meaningful contribution in the commit history | (part of the 5) | Member PRs (#6, #7, #8, #9) merged in commit history | Met |
 
 Deadline: **16 November 2026, 11:59 PM IST**. The plan and checklist are in [`TEAM_AND_PLAN.md`](TEAM_AND_PLAN.md).
+
+## Phase II rubric (70%)
+
+| Requirement | Evidence | Status |
+| --- | --- | --- |
+| Final IEEE report: abstract, literature review, proposed solution, results and discussion, individual contributions, conclusion, references | [`output/pdf/HEXARCH_Final_Report.pdf`](../output/pdf/HEXARCH_Final_Report.pdf), source `docs/report/phase2_report.tex` | Met |
+| GitHub repository maintained, version history and individual contributions | Member pull requests, see [`PHASE2.md`](PHASE2.md) for each member's Phase II task | In progress: needs every member's own Phase II PR |
+| Project interview (understanding, implementation, contributions) | Study guide sections 12-16 | Prepare; slots not yet announced |
+
+Submission format and date for Phase II: not yet announced by the instructors.

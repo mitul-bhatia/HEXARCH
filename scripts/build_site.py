@@ -29,7 +29,7 @@ def web_paths(html):
 nav = ('<nav class="topbar" aria-label="Site"><b>HEXARCH &middot; Project 9</b>'
        '<a href="index.html">Study guide</a>'
        '<a href="team.html">Team hub: tasks &amp; video script</a>'
-       '<a href="HEXARCH_Phase_I_Report.pdf">Report (PDF)</a>'
+       '<a href="HEXARCH_Final_Report.pdf">Final report (PDF)</a>' '<a href="HEXARCH_Phase_I_Report.pdf">Phase I report (PDF)</a>'
        '<a href="https://github.com/mitul-bhatia/HEXARCH">GitHub</a></nav>\n')
 
 # The same small icon as team.html, so the browser does not request /favicon.ico.
@@ -86,12 +86,12 @@ team = team.replace('src="hub-data.js"', f'src="hub-data.js?v={version}"')
 (site / "team.html").write_text(team)
 (site / "hub-data.js").write_text(hub_data)
 (site / "figures").mkdir()
-for name in ["architecture.png", "waveforms.png"]:
+for name in ["architecture.png", "waveforms.png", "hierarchy.png"]:
     shutil.copy(repo / "docs/figures" / name, site / "figures" / name)
 (site / "video").mkdir()
 for name in ["title_card.png", "end_card.png"]:
     shutil.copy(repo / "docs/video" / name, site / "video" / name)
-for name in ["HEXARCH_Study_Guide.pdf", "HEXARCH_Phase_I_Report.pdf"]:
+for name in ["HEXARCH_Study_Guide.pdf", "HEXARCH_Phase_I_Report.pdf", "HEXARCH_Final_Report.pdf"]:
     shutil.copy(repo / "output/pdf" / name, site / name)
 # Every image the pages or the hub data point at must exist in the site.
 for page in ["index.html", "team.html", "hub-data.js"]:
