@@ -27,7 +27,8 @@ def web_paths(html):
 
 
 nav = ('<nav class="topbar" aria-label="Site"><b>HEXARCH &middot; Project 9</b>'
-       '<a href="index.html">Study guide</a>'
+       '<a href="simple.html">Simple study sheet</a>'
+       '<a href="index.html">Full study guide</a>'
        '<a href="team.html">Team hub: tasks &amp; video script</a>'
        '<a href="HEXARCH_Final_Report.pdf">Final report (PDF)</a>' '<a href="HEXARCH_Phase_I_Report.pdf">Phase I report (PDF)</a>'
        '<a href="https://github.com/mitul-bhatia/HEXARCH">GitHub</a></nav>\n')
@@ -84,6 +85,9 @@ version = hashlib.sha256(hub_data.encode()).hexdigest()[:10]
 assert team.count('src="hub-data.js"') == 1
 team = team.replace('src="hub-data.js"', f'src="hub-data.js?v={version}"')
 (site / "team.html").write_text(team)
+simple = web_paths((repo / "docs/site/simple.html").read_text())
+assert "<!--NAV-->" in simple
+(site / "simple.html").write_text(simple.replace("<!--NAV-->", nav, 1))
 (site / "hub-data.js").write_text(hub_data)
 (site / "figures").mkdir()
 for name in ["architecture.png", "waveforms.png", "hierarchy.png"]:
