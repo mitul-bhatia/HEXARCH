@@ -30,6 +30,7 @@ nav = ('<nav class="topbar" aria-label="Site"><b>HEXARCH &middot; Project 9</b>'
        '<a href="simple.html">Simple study sheet</a>'
        '<a href="index.html">Full study guide</a>'
        '<a href="team.html">Team hub: tasks &amp; video script</a>'
+       '<a href="HEXARCH_Presentation.pptx">Presentation (PPTX)</a>'
        '<a href="HEXARCH_Final_Report.pdf">Final report (PDF)</a>' '<a href="HEXARCH_Phase_I_Report.pdf">Phase I report (PDF)</a>'
        '<a href="https://github.com/mitul-bhatia/HEXARCH">GitHub</a></nav>\n')
 
@@ -97,6 +98,7 @@ for name in ["title_card.png", "end_card.png"]:
     shutil.copy(repo / "docs/video" / name, site / "video" / name)
 for name in ["HEXARCH_Study_Guide.pdf", "HEXARCH_Phase_I_Report.pdf", "HEXARCH_Final_Report.pdf"]:
     shutil.copy(repo / "output/pdf" / name, site / name)
+shutil.copy(repo / "output/HEXARCH_Presentation.pptx", site / "HEXARCH_Presentation.pptx")
 # Every image the pages or the hub data point at must exist in the site.
 for page in ["index.html", "team.html", "hub-data.js"]:
     for ref in re.findall(r'(?:src="|"(?:image|endImage)": ")([^"]+\.png)', (site / page).read_text()):
